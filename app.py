@@ -61,8 +61,10 @@ def _demo_ai_response(user_input: str, history: list) -> str:
         else:
             duration_days = num
 
-    # ── Greetings / small talk ───────────────────────────────────────────
-    if any(kw in text for kw in ["hello", "hi", "hey", "help", "what can you"]):
+    # ── Greetings / small talk — only if no country or purpose detected ──
+    is_greeting = any(kw in text for kw in ["hello", "hi", "hey", "what can you"])
+    is_just_help = "help" in text and not detected_country and not (is_paid_work or is_unpaid or is_study or is_holiday)
+    if is_greeting or is_just_help:
         return (
             "Hello! I'm here to help you navigate travel with your UK Convention Travel Document (CTD).\n\n"
             "The most important thing I do differently from a simple lookup is reason through the **specific details** of your trip — "
