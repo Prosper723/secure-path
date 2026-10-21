@@ -12,10 +12,186 @@ Research prototype — does not constitute legal advice.
 import streamlit as st
 import sys
 import os
+import re
 
 sys.path.insert(0, os.path.dirname(__file__))
 from engine import check_eligibility, get_document_checklist, get_journey_steps
-from data import ALL_COUNTRIES, PURPOSES, CTD_INFO, AI_LEGAL_CONTEXT
+from data import ALL_COUNTRIES, PURPOSES, CTD_INFO, AI_LEGAL_CONTEXT, ETS_31_COUNTRIES, BILATERAL_COUNTRIES
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# DEMO AI — must be defined before the tab that calls it
+# ══════════════════════════════════════════════════════════════════════════════
+def _demo_ai_response(user_input: str, history: list) -> str:
+    """
+    Rule-based agentic reasoning engine for demo mode.
+    Parses user intent and applies CTD legal rules step by step.
+    """
+    text = user_input.lower()
+    all_history = " ".join([m["content"].lower() for m in history])
+
+    # ── Detect country ────────────────────────────────────────────────────
+    detected_country = None
+    for country in list(ETS_31_COUNTRIES.keys()) + list(BILATERAL_COUNTRIES.keys()):
+        if country.lower() in text or country.lower() in all_history:
+            detected_country = country
+            break
+
+    # ── Detect purpose signals ───────────────────────────────────────────
+    is_paid_work = any(kw in text for kw in [
+        "paid internship", "paid work", "job", "salary", "employment", "work permit",
+        "internship", "working", "earning", "stipend", "remuneration"
+    ])
+    is_unpaid = any(kw in text for kw in [
+        "volunteer", "voluntary", "unpaid", "charity", "ngo", "placement"
+    ])
+    is_study = any(kw in text for kw in ["study", "university", "masters", "phd", "degree", "student"])
+    is_holiday = any(kw in text for kw in ["holiday", "tourism", "tourist", "visit", "vacation"])
+
+    # ── Detect duration ──────────────────────────────────────────────────
+    duration_match = re.search(r'(\d+)\s*(day|week|month)', text)
+    duration_days = None
+    if duration_match:
+        num = int(duration_match.group(1))
+        unit = duration_match.group(2)
+        if unit == "week":
+            duration_days = num * 7
+        elif unit == "month":
+            duration_days = num * 30
+        else:
+            duration_days = num
+
+    # ── Greetings / small talk ───────────────────────────────────────────
+    if any(kw in text for kw in ["hello", "hi", "hey", "help", "what can you"]):
+        return (
+            "Hello! I'm here to help you navigate travel with your UK Convention Travel Document (CTD).\n\n"
+            "The most important thing I do differently from a simple lookup is reason through the **specific details** of your trip — "
+            "especially the **purpose** of your travel, which dramatically changes what visa rules apply.\n\n"
+            "For example, did you know that going to Romania for a **paid internship** requires a work visa, "
+            "even though Romania is an ETS No. 31 signatory country? A standard lookup would tell you 'no visa needed' — "
+            "which would be dangerously wrong.\n\n"
+            "Tell me: where are you travelling, what for, and how long are you planning to stay?"
+        )
+
+    # ── Paid internship in ETS 31 country ───────────────────────────────
+    if detected_country and detected_country in ETS_31_COUNTRIES and is_paid_work:
+        return f"""**🔍 Analysing your situation step by step...**
+
+**Your trip:** Paid work/internship → **{detected_country}** ({f'{duration_days} days' if duration_days else 'duration TBC'})
+
+---
+
+**Step 1: Is {detected_country} an ETS No. 31 country?**
+✅ Yes — {detected_country} ratified the 1959 Strasbourg Agreement.
+
+**Step 2: Does ETS No. 31 cover paid work?**
+🔴 **No. This is the critical rule.**
+
+Under **ETS No. 31 Article 1(2)**, the visa-free entitlement applies only to **non-gainful purposes**. A **paid internship** is classified as **gainful employment**, so the visa-free exemption **does not apply**.
+
+**Step 3: What do you actually need?**
+🔴 **You need a work visa / work permit** issued by {detected_country}.
+
+---
+
+**What to do next:**
+1. Contact the {detected_country} embassy in London for work visa requirements
+2. Ask your employer to begin the sponsorship/work permit process early (allow 8–12 weeks)
+3. Do not book flights until the work visa is confirmed
+
+⚠️ *Guidance based on ETS No. 31 Article 1(2). Verify with the {detected_country} embassy before travelling.*"""
+
+    # ── Unpaid voluntary work in ETS 31 country ─────────────────────────
+    if detected_country and detected_country in ETS_31_COUNTRIES and is_unpaid:
+        over = duration_days and duration_days > 90
+        return f"""**🔍 Analysing your situation...**
+
+**Your trip:** Unpaid voluntary work → **{detected_country}** ({f'{duration_days} days' if duration_days else 'duration TBC'})
+
+---
+
+✅ **Good news — your visa-free rights are preserved.**
+
+Under **ETS No. 31 Article 1(2)**, unpaid voluntary work is **NOT classified as gainful employment**. Your CTD entitles you to visa-free entry to {detected_country} for up to 90 days.
+
+{"⚠️ However, your stay of " + str(duration_days) + " days exceeds the 90-day limit — you would need a long-stay visa." if over else f"✅ Your stay of {duration_days} days is within the 90-day limit." if duration_days else ""}
+
+**Carry with you:** CTD (valid 6+ months beyond return), letter confirming unpaid placement, proof of funds, accommodation, and travel insurance.
+
+⚠️ *Guidance only. Verify with the {detected_country} embassy before travelling.*"""
+
+    # ── General ETS 31 visit ─────────────────────────────────────────────
+    if detected_country and detected_country in ETS_31_COUNTRIES:
+        over = duration_days and duration_days > 90
+        return f"""**🔍 Analysing your trip to {detected_country}...**
+
+{"⚠️ **Duration Alert:** Your planned stay of " + str(duration_days) + " days exceeds the 90-day visa-free limit. You would need a long-stay visa even though " + detected_country + " is an ETS No. 31 signatory." if over else "✅ **No visa required** for this trip under normal circumstances."}
+
+**Why:** {detected_country} has ratified the **1959 Strasbourg Agreement (ETS No. 31)**, which grants CTD holders visa-free entry for non-gainful purposes for up to 90 days.
+
+**One important question:** If any part of the trip involves **paid work or a paid internship**, the answer changes completely — paid work requires a work visa even in ETS No. 31 countries under Article 1(2).
+
+⚠️ *Some embassies incorrectly require visas for non-gainful ETS 31 travel. If this happens, cite ETS No. 31 directly.*"""
+
+    # ── Bilateral countries ───────────────────────────────────────────────
+    if detected_country and detected_country in BILATERAL_COUNTRIES:
+        info = BILATERAL_COUNTRIES[detected_country]
+        if info["visa_required"]:
+            evisa_note = f"\n\n🌐 **eVisa available:** {info['evisa_info']}" if info.get("evisa") else ""
+            return f"""**🔍 Analysing your trip to {detected_country}...**
+
+🔴 **Visa required** — {detected_country} is not an ETS No. 31 signatory and requires a visa from CTD holders.
+
+**Legal note:** {info['notes']}{evisa_note}
+
+Apply well in advance (at least 8 weeks). Ensure your CTD is valid for 6+ months beyond your return date.
+
+⚠️ *Guidance only. Verify with the {detected_country} embassy before booking.*"""
+        else:
+            return f"""**🔍 Analysing your trip to {detected_country}...**
+
+✅ **No visa required** under a bilateral arrangement between the UK and {detected_country}.
+
+**Note:** {info['notes']}
+
+⚠️ *Guidance only. Always confirm requirements with official sources before travelling.*"""
+
+    # ── Study ─────────────────────────────────────────────────────────────
+    if is_study and detected_country:
+        return f"""**🔍 Analysing your study trip to {detected_country}...**
+
+📚 **Study typically requires a student visa**, even in ETS No. 31 countries.
+
+Contact {detected_country}'s embassy in London or the international student office at your institution for exact requirements. You'll typically need: student visa, enrolment letter, proof of funds, accommodation, and travel insurance.
+
+⚠️ *Student visa rules vary significantly by country and course type.*"""
+
+    # ── Need more info ────────────────────────────────────────────────────
+    missing = []
+    if not detected_country:
+        missing.append("**destination country**")
+    if not (is_paid_work or is_unpaid or is_study or is_holiday):
+        missing.append("**purpose of your trip** (paid work, volunteer, tourism, study?)")
+    if not duration_days:
+        missing.append("**how long** you plan to stay")
+
+    if missing:
+        return (
+            f"To give you accurate guidance, I need a couple more details:\n\n"
+            + "\n".join(f"- {m}" for m in missing)
+            + "\n\nFor example: *'I'm going to Romania for a paid 3-month internship'* or "
+            "*'I want to visit France for 2 weeks as a tourist'*.\n\n"
+            "The **purpose** of your trip is especially important — whether work is paid or unpaid "
+            "can completely change the visa requirements under ETS No. 31 Article 1(2)."
+        )
+
+    return (
+        "Could you clarify a few things?\n\n"
+        "- Is this trip for **paid work**, **unpaid volunteering**, **tourism**, or **study**?\n"
+        "- Which **country** are you travelling to?\n"
+        "- How long is the planned stay?\n\n"
+        "These details are crucial — especially whether any work is paid, as this affects your rights under ETS No. 31."
+    )
 
 # ─── PAGE CONFIG ────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -664,214 +840,3 @@ FORMAT: Use clear markdown. Short paragraphs. Bold key conclusions. Use ✅ for 
             ]
             st.rerun()
 
-
-# ══════════════════════════════════════════════════════════════════════════════
-# DEMO AI — Agentic rule-based reasoning (no API key needed)
-# Demonstrates multi-step reasoning through CTD travel law.
-# ══════════════════════════════════════════════════════════════════════════════
-def _demo_ai_response(user_input: str, history: list) -> str:
-    """
-    Rule-based agentic reasoning engine for demo mode.
-    Parses user intent and applies CTD legal rules step by step.
-    Demonstrates the same logic the live AI would use.
-    """
-    from data import ETS_31_COUNTRIES, BILATERAL_COUNTRIES
-    import re
-
-    text = user_input.lower()
-    all_history = " ".join([m["content"].lower() for m in history])
-
-    # ── Detect country ────────────────────────────────────────────────────
-    detected_country = None
-    for country in list(ETS_31_COUNTRIES.keys()) + list(BILATERAL_COUNTRIES.keys()):
-        if country.lower() in text or country.lower() in all_history:
-            detected_country = country
-            break
-
-    # ── Detect purpose signals ───────────────────────────────────────────
-    is_paid_work = any(kw in text for kw in [
-        "paid internship", "paid work", "job", "salary", "employment", "work permit",
-        "internship", "working", "earning", "stipend", "remuneration"
-    ])
-    is_unpaid = any(kw in text for kw in [
-        "volunteer", "voluntary", "unpaid", "charity", "ngo", "placement"
-    ])
-    is_study = any(kw in text for kw in ["study", "university", "masters", "phd", "degree", "student"])
-    is_holiday = any(kw in text for kw in ["holiday", "tourism", "tourist", "visit", "vacation"])
-
-    # ── Detect duration ──────────────────────────────────────────────────
-    duration_match = re.search(r'(\d+)\s*(day|week|month)', text)
-    duration_days = None
-    if duration_match:
-        num = int(duration_match.group(1))
-        unit = duration_match.group(2)
-        if unit == "week":
-            duration_days = num * 7
-        elif unit == "month":
-            duration_days = num * 30
-        else:
-            duration_days = num
-
-    # ── Greetings / small talk ───────────────────────────────────────────
-    if any(kw in text for kw in ["hello", "hi", "hey", "help", "what can you"]):
-        return (
-            "Hello! I'm here to help you navigate travel with your UK Convention Travel Document (CTD).\n\n"
-            "The most important thing I do differently from a simple lookup is reason through the **specific details** of your trip — "
-            "especially the **purpose** of your travel, which dramatically changes what visa rules apply.\n\n"
-            "For example, did you know that going to Romania for a **paid internship** requires a work visa, "
-            "even though Romania is an ETS No. 31 signatory country? A standard lookup would tell you 'no visa needed' — "
-            "which would be dangerously wrong.\n\n"
-            "Tell me: where are you travelling, what for, and how long are you planning to stay?"
-        )
-
-    # ── The key scenario: paid internship in ETS 31 country ─────────────
-    if detected_country and detected_country in ETS_31_COUNTRIES and is_paid_work:
-        response = f"""**🔍 Analysing your situation step by step...**
-
-**Your trip:** Paid work/internship → **{detected_country}** ({f'{duration_days} days' if duration_days else 'duration TBC'})
-
----
-
-**Step 1: Is {detected_country} an ETS No. 31 country?**
-✅ Yes — {detected_country} ratified the 1959 Strasbourg Agreement.
-
-**Step 2: Does ETS No. 31 cover paid work?**
-🔴 **No. This is the critical rule.**
-
-Under **ETS No. 31 Article 1(2)**, the visa-free entitlement applies only to **non-gainful purposes** — tourism, visiting family, unpaid voluntary work, and similar activities.
-
-A **paid internship** is classified as **gainful employment** because you are receiving money for your work. This means the visa-free exemption **does not apply**, regardless of {detected_country}'s ETS No. 31 membership.
-
-**Step 3: What do you actually need?**
-🔴 **You need a work visa / work permit** issued by {detected_country}.
-
-Your employer or placement provider will likely need to sponsor your visa application. You cannot legally start work without it.
-
----
-
-**⚠️ Why this matters:**
-Many CTD holders — and even some embassy staff — incorrectly assume ETS No. 31 = visa-free for all purposes. Travelling to {detected_country} for paid work without a visa means you are working without authorisation, which could result in refusal of entry, deportation, or legal consequences.
-
-**What to do next:**
-1. Contact the {detected_country} embassy in London for work visa requirements
-2. Ask your employer to begin the sponsorship/work permit process early (allow 8–12 weeks)
-3. Do not book flights until the work visa is confirmed
-
-⚠️ *This is guidance based on ETS No. 31 Article 1(2). Please verify with the {detected_country} embassy before making travel arrangements.*"""
-        return response
-
-    # ── Unpaid voluntary work in ETS 31 country ─────────────────────────
-    if detected_country and detected_country in ETS_31_COUNTRIES and is_unpaid:
-        return f"""**🔍 Analysing your situation...**
-
-**Your trip:** Unpaid voluntary work → **{detected_country}** ({f'{duration_days} days' if duration_days else 'duration TBC'})
-
----
-
-✅ **Good news — your visa-free rights are preserved.**
-
-Under **ETS No. 31 Article 1(2)**, unpaid voluntary work is **NOT classified as gainful employment**. This means your Convention Travel Document entitles you to visa-free entry to {detected_country} for up to 90 days.
-
-{f"✅ Your stay of {duration_days} days is within the 90-day visa-free limit." if duration_days and duration_days <= 90 else f"⚠️ Your planned stay of {duration_days} days exceeds the 90-day visa-free limit. You would need a long-stay visa." if duration_days else ""}
-
-**What you should carry:**
-- Your valid CTD (must be valid 6+ months beyond return date)
-- A letter from the organisation confirming the placement is **unpaid** and stating the role and duration
-- Proof of sufficient funds and accommodation
-- Travel insurance
-
-**If an embassy questions this:**
-You can say: *"Under ETS No. 31 Article 1(2), unpaid voluntary work does not constitute gainful employment. My visa-free rights are preserved under this treaty, to which {detected_country} is a signatory."*
-
-⚠️ *Guidance only. Verify with the {detected_country} embassy before travelling.*"""
-
-    # ── General ETS 31 holiday ────────────────────────────────────────────
-    if detected_country and detected_country in ETS_31_COUNTRIES and (is_holiday or not (is_paid_work or is_unpaid or is_study)):
-        days_text = f" for {duration_days} days" if duration_days else ""
-        over_limit = duration_days and duration_days > 90
-        return f"""**🔍 Analysing your trip to {detected_country}{days_text}...**
-
-{"⚠️ **Duration Alert:** Your planned stay exceeds the 90-day visa-free limit. You would need a long-stay visa even though " + detected_country + " is an ETS No. 31 signatory." if over_limit else f"✅ **No visa required** for this trip under normal circumstances."}
-
-**Why:** {detected_country} has ratified the **1959 Strasbourg Agreement (ETS No. 31)**, which grants CTD holders visa-free entry for non-gainful purposes for up to 90 days.
-
-{"✅ Your stay of " + str(duration_days) + " days is within the limit." if duration_days and duration_days <= 90 else ""}
-
-**One important question:** Is this trip purely for {"tourism/visiting" if is_holiday else "non-work purposes"}? If any part of the trip involves **paid work or a paid internship**, the answer changes completely — paid work requires a work visa even in ETS No. 31 countries under Article 1(2).
-
-⚠️ *Note: Some embassies incorrectly advise CTD holders to get a visa for non-gainful travel to ETS 31 countries. If this happens, you can cite ETS No. 31 directly and request a review.*"""
-
-    # ── Bilateral countries ───────────────────────────────────────────────
-    if detected_country and detected_country in BILATERAL_COUNTRIES:
-        info = BILATERAL_COUNTRIES[detected_country]
-        if info["visa_required"]:
-            evisa_note = f"\n\n🌐 **eVisa available:** {info['evisa_info']}" if info.get("evisa") else ""
-            return f"""**🔍 Analysing your trip to {detected_country}...**
-
-🔴 **Visa required** — {detected_country} is not an ETS No. 31 signatory and requires a visa from CTD holders.
-
-**Legal note:** {info['notes']}{evisa_note}
-
-**What to do:**
-1. Apply for the relevant visa well in advance (at least 8 weeks before travel)
-2. Ensure your CTD is valid for at least 6 months beyond your return date
-3. Gather supporting documents: accommodation, return travel, funds, travel insurance
-
-⚠️ *Guidance only. Verify current requirements with the {detected_country} embassy before booking.*"""
-        else:
-            return f"""**🔍 Analysing your trip to {detected_country}...**
-
-✅ **No visa required** under a bilateral arrangement between the UK and {detected_country}.
-
-**Note:** {info['notes']}
-
-{"⚠️ If you're planning to **work** there, even in a visa-free country, you'll need to check work permit requirements separately." if is_paid_work else ""}
-
-⚠️ *Guidance only. Always confirm requirements with official sources before travelling.*"""
-
-    # ── Study ─────────────────────────────────────────────────────────────
-    if is_study and detected_country:
-        return f"""**🔍 Analysing your study trip to {detected_country}...**
-
-📚 **Study typically requires a student visa**, even in ETS No. 31 countries.
-
-While ETS No. 31 covers short-term non-gainful travel, formal study (university enrollment, degree courses) is generally treated as a separate category by most countries and requires a specific student visa or residence permit.
-
-**What you'll typically need:**
-- Student visa or study permit for {detected_country}
-- Official enrolment/acceptance letter from the institution
-- Proof of tuition payment or scholarship
-- Proof of accommodation and sufficient funds
-- Health/travel insurance for the full duration
-- CTD valid 6+ months beyond your return date
-
-**My recommendation:** Contact {detected_country}'s embassy in London or the international student office at your institution for the exact requirements.
-
-⚠️ *This is general guidance. Student visa rules vary significantly by country and course type.*"""
-
-    # ── Need more info ────────────────────────────────────────────────────
-    missing = []
-    if not detected_country:
-        missing.append("**destination country**")
-    if not (is_paid_work or is_unpaid or is_study or is_holiday):
-        missing.append("**purpose of your trip** (paid work, volunteer, tourism, study?)")
-    if not duration_days:
-        missing.append("**how long** you plan to stay")
-
-    if missing:
-        return (
-            f"To give you accurate guidance, I need a couple more details:\n\n"
-            + "\n".join(f"- {m}" for m in missing)
-            + "\n\nFor example: *'I'm going to Romania for a paid 3-month internship'* or "
-            "*'I want to visit France for 2 weeks as a tourist'*.\n\n"
-            "The **purpose** of your trip is especially important — whether something is paid or unpaid "
-            "can completely change the visa requirements under ETS No. 31 Article 1(2)."
-        )
-
-    return (
-        "I've noted your situation. Could you clarify a few things to make sure I give you the right answer?\n\n"
-        "- Is this trip for **paid work** (salary/stipend), **unpaid volunteering**, **tourism**, or **study**?\n"
-        "- Which **country** are you travelling to?\n"
-        "- How long is the planned stay?\n\n"
-        "These details are crucial — especially whether any work is paid, as this affects your rights under ETS No. 31."
-    )
