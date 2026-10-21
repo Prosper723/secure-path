@@ -78,7 +78,9 @@
     "afghan",
     "afghani"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Albania",
@@ -90,9 +92,9 @@
    "eu": false,
    "ets31": "none",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "low",
-   "summary": "Reported as visa-free for UK refugee travel document holders — confirm before booking.",
+   "summary": "Some guides report visa-free entry, but no official source confirms it — ask the embassy before booking.",
    "notes": [],
    "sources": [
     {
@@ -114,7 +116,9 @@
    "demonyms": [
     "albanian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Algeria",
@@ -145,7 +149,9 @@
    "demonyms": [
     "algerian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Andorra",
@@ -179,7 +185,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Angola",
@@ -208,7 +216,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Antigua and Barbuda",
@@ -237,7 +247,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Argentina",
@@ -266,7 +278,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Armenia",
@@ -295,7 +309,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Australia",
@@ -327,7 +343,9 @@
     "melbourne"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Austria",
@@ -341,7 +359,7 @@
    "ets31_note": null,
    "status": "check",
    "confidence": "medium",
-   "summary": "Rules unclear — confirm with the embassy before booking. Some sources report this country may now require a visa from UK travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some sources report this country may require a visa from UK travel document holders.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -360,11 +378,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -378,7 +391,9 @@
     "vienna"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Azerbaijan",
@@ -407,7 +422,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Bahamas",
@@ -436,7 +453,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Bahrain",
@@ -465,7 +484,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Bangladesh",
@@ -496,7 +517,9 @@
    "demonyms": [
     "bangladeshi"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Barbados",
@@ -525,7 +548,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Belarus",
@@ -556,7 +581,9 @@
    "demonyms": [
     "belarusian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Belgium",
@@ -568,9 +595,9 @@
    "eu": true,
    "ets31": "party",
    "ets31_note": null,
-   "status": "check",
-   "confidence": "medium",
-   "summary": "Rules unclear — confirm with the embassy before booking. Some sources report this country may now require a visa from UK travel document holders.",
+   "status": "visa_required",
+   "confidence": "verified",
+   "summary": "Visa required with a UK refugee travel document — confirmed by the embassy.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -578,6 +605,11 @@
     "Expect biometric registration (fingerprints and photo) at the border under the EU Entry/Exit System."
    ],
    "sources": [
+    {
+     "label": "Embassy of Belgium in the UK — UK travel documents",
+     "url": "https://unitedkingdom.diplomatie.belgium.be/en/travel-belgium/visa-belgium/uk-travel-documents",
+     "kind": "official"
+    },
     {
      "label": "EU Regulation 2018/1806, Art. 6(2)",
      "url": "https://eur-lex.europa.eu/eli/reg/2018/1806/2025-12-30/eng",
@@ -587,11 +619,6 @@
      "label": "EU notice of Member State visa exemptions (2023/C 340)",
      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A52023XC0927%2801%29",
      "kind": "official"
-    },
-    {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
     },
     {
      "label": "Foreign embassies in the UK (GOV.UK)",
@@ -607,7 +634,22 @@
     "brussels"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": {
+    "ctd": "visa_required",
+    "stateless": "visa_required",
+    "cot": "visa_required"
+   },
+   "evidence": {
+    "quote": "If you hold a blue travel document issued by the United Kingdom ... you do require a Schengen visa (type C) to travel to Belgium.",
+    "extra": "The same applies to the red stateless document. The black document is not recognised by the Benelux authorities without special authorisation (up to 85 days).",
+    "source": {
+     "label": "Embassy of Belgium in the UK — UK travel documents",
+     "url": "https://unitedkingdom.diplomatie.belgium.be/en/travel-belgium/visa-belgium/uk-travel-documents",
+     "kind": "official"
+    },
+    "checked": "2026-10-21"
+   }
   },
   {
    "name": "Belize",
@@ -636,7 +678,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Benin",
@@ -665,7 +709,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Bhutan",
@@ -694,7 +740,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Bolivia",
@@ -723,7 +771,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Bosnia and Herzegovina",
@@ -755,7 +805,9 @@
     "sarajevo"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Botswana",
@@ -784,7 +836,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Brazil",
@@ -818,7 +872,9 @@
    "demonyms": [
     "brazilian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Brunei",
@@ -847,7 +903,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Bulgaria",
@@ -861,7 +919,7 @@
    "ets31_note": null,
    "status": "check",
    "confidence": "medium",
-   "summary": "Rules unclear — confirm with the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
+   "summary": "Not confirmed — ask the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -880,11 +938,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -896,7 +949,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Burkina Faso",
@@ -925,7 +980,9 @@
    "fcdo_warning": true,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Burundi",
@@ -956,7 +1013,9 @@
    "demonyms": [
     "burundian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Cambodia",
@@ -985,7 +1044,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Cameroon",
@@ -1016,7 +1077,9 @@
    "demonyms": [
     "cameroonian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Canada",
@@ -1051,7 +1114,9 @@
     "montreal"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Cape Verde",
@@ -1082,7 +1147,9 @@
     "cabo verde"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Central African Republic",
@@ -1111,7 +1178,9 @@
    "fcdo_warning": true,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Chad",
@@ -1142,7 +1211,9 @@
    "demonyms": [
     "chadian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Chile",
@@ -1171,7 +1242,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "China",
@@ -1205,7 +1278,9 @@
    "demonyms": [
     "chinese"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Colombia",
@@ -1236,7 +1311,9 @@
    "demonyms": [
     "colombian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Comoros",
@@ -1265,7 +1342,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Costa Rica",
@@ -1294,7 +1373,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Croatia",
@@ -1306,9 +1387,9 @@
    "eu": true,
    "ets31": "none",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some secondary guides say visa-free, but we have not found the embassy confirming it.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -1327,16 +1408,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
-     "kind": "official"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -1348,7 +1419,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Cuba",
@@ -1379,7 +1452,9 @@
    "demonyms": [
     "cuban"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Cyprus",
@@ -1408,7 +1483,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Czech Republic",
@@ -1422,7 +1499,7 @@
    "ets31_note": null,
    "status": "check",
    "confidence": "medium",
-   "summary": "Rules unclear — confirm with the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
+   "summary": "Not confirmed — ask the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -1441,11 +1518,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -1460,7 +1532,9 @@
     "prague"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Côte d'Ivoire",
@@ -1495,7 +1569,9 @@
    "demonyms": [
     "ivorian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Democratic Republic of the Congo",
@@ -1531,7 +1607,9 @@
    "demonyms": [
     "congolese"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Denmark",
@@ -1543,9 +1621,9 @@
    "eu": true,
    "ets31": "party",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some secondary guides say visa-free, but we have not found the embassy confirming it.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -1564,16 +1642,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
-     "kind": "official"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -1587,7 +1655,9 @@
     "copenhagen"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Djibouti",
@@ -1616,7 +1686,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Dominica",
@@ -1645,7 +1717,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Dominican Republic",
@@ -1674,7 +1748,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Ecuador",
@@ -1703,7 +1779,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Egypt",
@@ -1738,7 +1816,9 @@
    "demonyms": [
     "egyptian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "El Salvador",
@@ -1770,7 +1850,9 @@
     "salvadoran",
     "salvadorian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Equatorial Guinea",
@@ -1799,7 +1881,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Eritrea",
@@ -1830,7 +1914,9 @@
    "demonyms": [
     "eritrean"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Estonia",
@@ -1844,7 +1930,7 @@
    "ets31_note": null,
    "status": "check",
    "confidence": "medium",
-   "summary": "Rules unclear — confirm with the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
+   "summary": "Not confirmed — ask the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -1863,11 +1949,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -1879,7 +1960,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Eswatini",
@@ -1910,7 +1993,9 @@
     "swaziland"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Ethiopia",
@@ -1943,7 +2028,9 @@
    "demonyms": [
     "ethiopian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Fiji",
@@ -1972,7 +2059,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Finland",
@@ -1984,9 +2073,9 @@
    "eu": true,
    "ets31": "party",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some secondary guides say visa-free, but we have not found the embassy confirming it.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -2005,16 +2094,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
-     "kind": "official"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -2028,7 +2107,9 @@
     "helsinki"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "France",
@@ -2042,7 +2123,7 @@
    "ets31_note": "France suspended it in 1986",
    "status": "check",
    "confidence": "medium",
-   "summary": "Rules unclear — confirm with the embassy before booking. Some sources report this country may now require a visa from UK travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some sources report this country may require a visa from UK travel document holders.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -2062,11 +2143,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -2081,7 +2157,9 @@
     "nice"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Gabon",
@@ -2110,7 +2188,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Gambia",
@@ -2143,7 +2223,9 @@
    "demonyms": [
     "gambian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Georgia",
@@ -2174,7 +2256,9 @@
    "demonyms": [
     "georgian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Germany",
@@ -2187,8 +2271,8 @@
    "ets31": "party",
    "ets31_note": null,
    "status": "visa_free",
-   "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "confidence": "verified",
+   "summary": "Visa-free for short stays (up to 90 days in 180) with a UK refugee travel document — confirmed by the embassy.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -2197,6 +2281,11 @@
    ],
    "sources": [
     {
+     "label": "German Missions in the UK — travelling with UK travel documents",
+     "url": "https://uk.diplo.de/uk-en/02/travelling-with-uk-travel-documents-2632112",
+     "kind": "official"
+    },
+    {
      "label": "EU Regulation 2018/1806, Art. 6(2)",
      "url": "https://eur-lex.europa.eu/eli/reg/2018/1806/2025-12-30/eng",
      "kind": "official"
@@ -2204,16 +2293,6 @@
     {
      "label": "EU notice of Member State visa exemptions (2023/C 340)",
      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A52023XC0927%2801%29",
-     "kind": "official"
-    },
-    {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
      "kind": "official"
     },
     {
@@ -2232,7 +2311,22 @@
     "frankfurt"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": {
+    "ctd": "visa_free",
+    "stateless": "visa_free",
+    "cot": "visa_required"
+   },
+   "evidence": {
+    "quote": "Holders of a Refugee Convention Travel Document (1951) ... do not require a visa for travel to Germany provided that the duration of their stay does not exceed 90 days [in any 180-day period].",
+    "extra": "A British Certificate of Travel (black) requires a visa for any kind of stay. The document must have been issued within the last 10 years and be valid 3 months beyond departure.",
+    "source": {
+     "label": "German Missions in the UK — travelling with UK travel documents",
+     "url": "https://uk.diplo.de/uk-en/02/travelling-with-uk-travel-documents-2632112",
+     "kind": "official"
+    },
+    "checked": "2026-10-21"
+   }
   },
   {
    "name": "Ghana",
@@ -2265,7 +2359,9 @@
    "demonyms": [
     "ghanaian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Greece",
@@ -2277,9 +2373,9 @@
    "eu": true,
    "ets31": "none",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some secondary guides say visa-free, but we have not found the embassy confirming it.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -2295,16 +2391,6 @@
     {
      "label": "EU notice of Member State visa exemptions (2023/C 340)",
      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A52023XC0927%2801%29",
-     "kind": "official"
-    },
-    {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
      "kind": "official"
     },
     {
@@ -2324,7 +2410,9 @@
     "santorini"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Grenada",
@@ -2353,7 +2441,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Guatemala",
@@ -2382,7 +2472,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Guinea",
@@ -2413,7 +2505,9 @@
    "demonyms": [
     "guinean"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Guinea-Bissau",
@@ -2442,7 +2536,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Guyana",
@@ -2471,7 +2567,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Haiti",
@@ -2502,7 +2600,9 @@
    "demonyms": [
     "haitian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Holy See (Vatican City)",
@@ -2515,19 +2615,14 @@
    "ets31": "none",
    "ets31_note": null,
    "status": "visa_free",
-   "confidence": "low",
-   "summary": "Reached through Italy — if you can enter Italy visa-free, you can usually visit.",
+   "confidence": "medium",
+   "summary": "Reached only through Italy, with no border checks. Italy's consulate confirms UK refugee and stateless document holders can visit visa-free, so you can usually visit too.",
    "notes": [],
    "sources": [
     {
-     "label": "EU notice of Member State visa exemptions (2023/C 340)",
-     "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A52023XC0927%2801%29",
+     "label": "Consulate General of Italy in London — UK travel document",
+     "url": "https://conslondra.esteri.it/en/servizi-consolari-e-visti/servizi-per-il-cittadino-straniero/visti/uk-travel-document/",
      "kind": "official"
-    },
-    {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
     },
     {
      "label": "Foreign embassies in the UK (GOV.UK)",
@@ -2545,7 +2640,9 @@
     "holy see"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Honduras",
@@ -2576,7 +2673,9 @@
    "demonyms": [
     "honduran"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Hungary",
@@ -2590,7 +2689,7 @@
    "ets31_note": null,
    "status": "check",
    "confidence": "medium",
-   "summary": "Rules unclear — confirm with the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
+   "summary": "Not confirmed — ask the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -2607,11 +2706,6 @@
      "label": "EU notice of Member State visa exemptions (2023/C 340)",
      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A52023XC0927%2801%29",
      "kind": "official"
-    },
-    {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
     },
     {
      "label": "Foreign embassies in the UK (GOV.UK)",
@@ -2627,7 +2721,9 @@
     "budapest"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Iceland",
@@ -2639,9 +2735,9 @@
    "eu": false,
    "ets31": "party",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some secondary guides say visa-free, but we have not found the embassy confirming it.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -2660,16 +2756,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
-     "kind": "official"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -2681,7 +2767,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "India",
@@ -2716,7 +2804,9 @@
    "demonyms": [
     "indian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Indonesia",
@@ -2748,7 +2838,9 @@
     "jakarta"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Iran",
@@ -2780,7 +2872,9 @@
     "iranian",
     "persian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Iraq",
@@ -2811,7 +2905,9 @@
    "demonyms": [
     "iraqi"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Ireland",
@@ -2855,7 +2951,9 @@
     "republic of ireland"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Israel",
@@ -2884,7 +2982,9 @@
    "fcdo_warning": true,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Italy",
@@ -2897,8 +2997,8 @@
    "ets31": "party",
    "ets31_note": null,
    "status": "visa_free",
-   "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "confidence": "verified",
+   "summary": "Visa-free for short stays (up to 90 days in 180) with a UK refugee travel document — confirmed by the embassy.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -2907,6 +3007,11 @@
    ],
    "sources": [
     {
+     "label": "Consulate General of Italy in London — UK travel document",
+     "url": "https://conslondra.esteri.it/en/servizi-consolari-e-visti/servizi-per-il-cittadino-straniero/visti/uk-travel-document/",
+     "kind": "official"
+    },
+    {
      "label": "EU Regulation 2018/1806, Art. 6(2)",
      "url": "https://eur-lex.europa.eu/eli/reg/2018/1806/2025-12-30/eng",
      "kind": "official"
@@ -2914,16 +3019,6 @@
     {
      "label": "EU notice of Member State visa exemptions (2023/C 340)",
      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A52023XC0927%2801%29",
-     "kind": "official"
-    },
-    {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
      "kind": "official"
     },
     {
@@ -2944,7 +3039,22 @@
     "sardinia"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": {
+    "ctd": "visa_free",
+    "stateless": "visa_free",
+    "cot": "visa_required"
+   },
+   "evidence": {
+    "quote": "Holders of 1951 Geneva Refugee Convention Travel Document (Blue) and Holders of 1954 UN Convention Travel Document for Stateless (Red) issued in Great Britain can travel visa free up to 90 days.",
+    "extra": "Only for refugees and stateless persons who live in the UK. Certificate of Travel (black) holders need a visa.",
+    "source": {
+     "label": "Consulate General of Italy in London — UK travel document",
+     "url": "https://conslondra.esteri.it/en/servizi-consolari-e-visti/servizi-per-il-cittadino-straniero/visti/uk-travel-document/",
+     "kind": "official"
+    },
+    "checked": "2026-10-21"
+   }
   },
   {
    "name": "Jamaica",
@@ -2973,7 +3083,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Japan",
@@ -3004,7 +3116,9 @@
     "tokyo"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Jordan",
@@ -3035,7 +3149,9 @@
    "demonyms": [
     "jordanian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Kazakhstan",
@@ -3064,7 +3180,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Kenya",
@@ -3097,7 +3215,9 @@
    "demonyms": [
     "kenyan"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Kiribati",
@@ -3126,7 +3246,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Kosovo",
@@ -3138,9 +3260,9 @@
    "eu": false,
    "ets31": "none",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "low",
-   "summary": "Reported as visa-free for UK refugee travel document holders — confirm before booking.",
+   "summary": "Some guides report visa-free entry, but no official source confirms it — ask the embassy before booking.",
    "notes": [],
    "sources": [
     {
@@ -3160,7 +3282,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Kuwait",
@@ -3191,7 +3315,9 @@
    "demonyms": [
     "kuwaiti"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Kyrgyzstan",
@@ -3220,7 +3346,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Laos",
@@ -3251,7 +3379,9 @@
     "lao"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Latvia",
@@ -3265,7 +3395,7 @@
    "ets31_note": null,
    "status": "check",
    "confidence": "medium",
-   "summary": "Rules unclear — confirm with the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
+   "summary": "Not confirmed — ask the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -3284,11 +3414,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -3300,7 +3425,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Lebanon",
@@ -3331,7 +3458,9 @@
    "demonyms": [
     "lebanese"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Lesotho",
@@ -3360,7 +3489,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Liberia",
@@ -3391,7 +3522,9 @@
    "demonyms": [
     "liberian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Libya",
@@ -3422,7 +3555,9 @@
    "demonyms": [
     "libyan"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Liechtenstein",
@@ -3436,7 +3571,7 @@
    "ets31_note": null,
    "status": "check",
    "confidence": "medium",
-   "summary": "Rules unclear — confirm with the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
+   "summary": "Not confirmed — ask the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -3455,11 +3590,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -3471,7 +3601,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Lithuania",
@@ -3483,9 +3615,9 @@
    "eu": true,
    "ets31": "none",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some secondary guides say visa-free, but we have not found the embassy confirming it.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -3504,16 +3636,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
-     "kind": "official"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -3525,7 +3647,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Luxembourg",
@@ -3537,9 +3661,9 @@
    "eu": true,
    "ets31": "party",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some secondary guides say visa-free, but we have not found the embassy confirming it.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -3558,16 +3682,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
-     "kind": "official"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -3579,7 +3693,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Madagascar",
@@ -3608,7 +3724,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Malawi",
@@ -3637,7 +3755,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Malaysia",
@@ -3668,7 +3788,9 @@
    "demonyms": [
     "malaysian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Maldives",
@@ -3699,7 +3821,9 @@
     "maldive islands"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Mali",
@@ -3730,7 +3854,9 @@
    "demonyms": [
     "malian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Malta",
@@ -3742,9 +3868,9 @@
    "eu": true,
    "ets31": "party",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some secondary guides say visa-free, but we have not found the embassy confirming it.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -3763,16 +3889,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
-     "kind": "official"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -3784,7 +3900,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Marshall Islands",
@@ -3813,7 +3931,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Mauritania",
@@ -3842,7 +3962,9 @@
    "fcdo_warning": true,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Mauritius",
@@ -3871,7 +3993,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Mexico",
@@ -3905,7 +4029,9 @@
    "demonyms": [
     "mexican"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Micronesia",
@@ -3934,7 +4060,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Moldova",
@@ -3946,9 +4074,9 @@
    "eu": false,
    "ets31": "none",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "low",
-   "summary": "Reported as visa-free for UK refugee travel document holders — confirm before booking.",
+   "summary": "Some guides report visa-free entry, but no official source confirms it — ask the embassy before booking.",
    "notes": [],
    "sources": [
     {
@@ -3968,7 +4096,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Monaco",
@@ -4002,7 +4132,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Mongolia",
@@ -4031,7 +4163,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Montenegro",
@@ -4060,7 +4194,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Morocco",
@@ -4095,7 +4231,9 @@
    "demonyms": [
     "moroccan"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Mozambique",
@@ -4124,7 +4262,9 @@
    "fcdo_warning": true,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Myanmar",
@@ -4158,7 +4298,9 @@
     "burmese",
     "rohingya"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Namibia",
@@ -4187,7 +4329,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Nauru",
@@ -4216,7 +4360,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Nepal",
@@ -4248,7 +4394,9 @@
     "nepali",
     "nepalese"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Netherlands",
@@ -4260,9 +4408,9 @@
    "eu": true,
    "ets31": "party",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some secondary guides say visa-free, but we have not found the embassy confirming it.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -4281,16 +4429,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
-     "kind": "official"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -4306,7 +4444,9 @@
     "the netherlands"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "New Zealand",
@@ -4335,7 +4475,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Nicaragua",
@@ -4364,7 +4506,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Niger",
@@ -4393,7 +4537,9 @@
    "fcdo_warning": true,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Nigeria",
@@ -4427,7 +4573,9 @@
    "demonyms": [
     "nigerian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "North Korea",
@@ -4458,7 +4606,9 @@
     "dprk"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "North Macedonia",
@@ -4489,7 +4639,9 @@
     "macedonia"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Norway",
@@ -4501,9 +4653,9 @@
    "eu": false,
    "ets31": "party",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some secondary guides say visa-free, but we have not found the embassy confirming it.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -4522,16 +4674,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
-     "kind": "official"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -4545,7 +4687,9 @@
     "oslo"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Oman",
@@ -4574,7 +4718,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Pakistan",
@@ -4605,7 +4751,9 @@
    "demonyms": [
     "pakistani"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Palau",
@@ -4634,7 +4782,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Palestine",
@@ -4669,7 +4819,9 @@
    "demonyms": [
     "palestinian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Panama",
@@ -4698,7 +4850,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Papua New Guinea",
@@ -4727,7 +4881,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Paraguay",
@@ -4756,7 +4912,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Peru",
@@ -4785,7 +4943,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Philippines",
@@ -4816,7 +4976,9 @@
    "demonyms": [
     "filipino"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Poland",
@@ -4828,9 +4990,9 @@
    "eu": true,
    "ets31": "party",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some secondary guides say visa-free, but we have not found the embassy confirming it.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -4846,16 +5008,6 @@
     {
      "label": "EU notice of Member State visa exemptions (2023/C 340)",
      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A52023XC0927%2801%29",
-     "kind": "official"
-    },
-    {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
      "kind": "official"
     },
     {
@@ -4873,7 +5025,9 @@
     "krakow"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Portugal",
@@ -4887,7 +5041,7 @@
    "ets31_note": null,
    "status": "check",
    "confidence": "medium",
-   "summary": "Rules unclear — confirm with the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
+   "summary": "Not confirmed — ask the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -4904,11 +5058,6 @@
      "label": "EU notice of Member State visa exemptions (2023/C 340)",
      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A52023XC0927%2801%29",
      "kind": "official"
-    },
-    {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
     },
     {
      "label": "Foreign embassies in the UK (GOV.UK)",
@@ -4927,7 +5076,9 @@
     "madeira"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Qatar",
@@ -4958,7 +5109,9 @@
     "doha"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Republic of the Congo",
@@ -4990,7 +5143,9 @@
     "congo-brazzaville"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Romania",
@@ -5002,9 +5157,9 @@
    "eu": true,
    "ets31": "party",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some secondary guides say visa-free, but we have not found the embassy confirming it.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -5023,16 +5178,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
-     "kind": "official"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -5046,7 +5191,9 @@
     "bucharest"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Russia",
@@ -5077,7 +5224,9 @@
    "demonyms": [
     "russian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Rwanda",
@@ -5108,7 +5257,9 @@
    "demonyms": [
     "rwandan"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Saint Kitts and Nevis",
@@ -5137,7 +5288,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Saint Lucia",
@@ -5166,7 +5319,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Saint Vincent and the Grenadines",
@@ -5195,7 +5350,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Samoa",
@@ -5224,7 +5381,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "San Marino",
@@ -5237,19 +5396,14 @@
    "ets31": "none",
    "ets31_note": null,
    "status": "visa_free",
-   "confidence": "low",
-   "summary": "Reached through Italy — if you can enter Italy visa-free, you can usually visit.",
+   "confidence": "medium",
+   "summary": "Reached only through Italy, with no border checks. Italy's consulate confirms UK refugee and stateless document holders can visit visa-free, so you can usually visit too.",
    "notes": [],
    "sources": [
     {
-     "label": "EU notice of Member State visa exemptions (2023/C 340)",
-     "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A52023XC0927%2801%29",
+     "label": "Consulate General of Italy in London — UK travel document",
+     "url": "https://conslondra.esteri.it/en/servizi-consolari-e-visti/servizi-per-il-cittadino-straniero/visti/uk-travel-document/",
      "kind": "official"
-    },
-    {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
     },
     {
      "label": "Foreign embassies in the UK (GOV.UK)",
@@ -5263,7 +5417,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Sao Tome and Principe",
@@ -5292,7 +5448,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Saudi Arabia",
@@ -5331,7 +5489,9 @@
    "demonyms": [
     "saudi"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Senegal",
@@ -5362,7 +5522,9 @@
    "demonyms": [
     "senegalese"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Serbia",
@@ -5391,7 +5553,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Seychelles",
@@ -5420,7 +5584,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Sierra Leone",
@@ -5451,7 +5617,9 @@
    "demonyms": [
     "sierra leonean"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Singapore",
@@ -5480,7 +5648,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Slovakia",
@@ -5494,7 +5664,7 @@
    "ets31_note": null,
    "status": "check",
    "confidence": "medium",
-   "summary": "Rules unclear — confirm with the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
+   "summary": "Not confirmed — ask the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -5513,11 +5683,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -5529,7 +5694,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Slovenia",
@@ -5541,9 +5708,9 @@
    "eu": true,
    "ets31": "none",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "summary": "Not confirmed — ask the embassy before booking. Some secondary guides say visa-free, but we have not found the embassy confirming it.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -5562,16 +5729,6 @@
      "kind": "official"
     },
     {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
-     "kind": "official"
-    },
-    {
      "label": "Foreign embassies in the UK (GOV.UK)",
      "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk",
      "kind": "official"
@@ -5583,7 +5740,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Solomon Islands",
@@ -5612,7 +5771,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Somalia",
@@ -5644,7 +5805,9 @@
     "somali",
     "somalian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "South Africa",
@@ -5676,7 +5839,9 @@
     "johannesburg"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "South Korea",
@@ -5708,7 +5873,9 @@
     "seoul"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "South Sudan",
@@ -5739,7 +5906,9 @@
    "demonyms": [
     "south sudanese"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Spain",
@@ -5751,9 +5920,9 @@
    "eu": true,
    "ets31": "party",
    "ets31_note": null,
-   "status": "check",
-   "confidence": "medium",
-   "summary": "Rules unclear — confirm with the embassy before booking. Some sources report this country may now require a visa from UK travel document holders.",
+   "status": "visa_required",
+   "confidence": "verified",
+   "summary": "Visa required with a UK refugee travel document — confirmed by the embassy.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -5761,6 +5930,11 @@
     "Expect biometric registration (fingerprints and photo) at the border under the EU Entry/Exit System."
    ],
    "sources": [
+    {
+     "label": "Consulate General of Spain in London — visa FAQs",
+     "url": "https://www.exteriores.gob.es/DocumentosAuxiliaresSC/Reino%20Unido/LONDRES%20(C)/FAQs%20VISADOS.pdf",
+     "kind": "official"
+    },
     {
      "label": "EU Regulation 2018/1806, Art. 6(2)",
      "url": "https://eur-lex.europa.eu/eli/reg/2018/1806/2025-12-30/eng",
@@ -5770,11 +5944,6 @@
      "label": "EU notice of Member State visa exemptions (2023/C 340)",
      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A52023XC0927%2801%29",
      "kind": "official"
-    },
-    {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
     },
     {
      "label": "Foreign embassies in the UK (GOV.UK)",
@@ -5797,7 +5966,22 @@
     "malaga"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": {
+    "ctd": "visa_required",
+    "stateless": "visa_required",
+    "cot": "visa_required"
+   },
+   "evidence": {
+    "quote": "I am a holder of a refugee travel document issued under the 1951 Convention — Yes, you should apply for a Schengen visa.",
+    "extra": "The same answer is given for 1954 stateless travel documents.",
+    "source": {
+     "label": "Consulate General of Spain in London — visa FAQs",
+     "url": "https://www.exteriores.gob.es/DocumentosAuxiliaresSC/Reino%20Unido/LONDRES%20(C)/FAQs%20VISADOS.pdf",
+     "kind": "official"
+    },
+    "checked": "2026-10-21"
+   }
   },
   {
    "name": "Sri Lanka",
@@ -5829,7 +6013,9 @@
     "sri lankan",
     "tamil"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Sudan",
@@ -5860,7 +6046,9 @@
    "demonyms": [
     "sudanese"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Suriname",
@@ -5889,7 +6077,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Sweden",
@@ -5903,7 +6093,7 @@
    "ets31_note": null,
    "status": "check",
    "confidence": "medium",
-   "summary": "Rules unclear — confirm with the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
+   "summary": "Not confirmed — ask the embassy before booking. EU rules allow this country to exempt you, but we could not confirm that it does.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -5920,11 +6110,6 @@
      "label": "EU notice of Member State visa exemptions (2023/C 340)",
      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A52023XC0927%2801%29",
      "kind": "official"
-    },
-    {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
     },
     {
      "label": "Foreign embassies in the UK (GOV.UK)",
@@ -5940,7 +6125,9 @@
     "stockholm"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Switzerland",
@@ -5953,8 +6140,8 @@
    "ets31": "party",
    "ets31_note": null,
    "status": "visa_free",
-   "confidence": "medium",
-   "summary": "Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.",
+   "confidence": "verified",
+   "summary": "Visa-free for short stays (up to 90 days in 180) with a UK refugee travel document — confirmed by the embassy.",
    "notes": [
     "Schengen rule: up to 90 days in any 180-day period, counted across ALL Schengen countries together.",
     "Legal basis: the EU lets each Schengen state exempt refugees and stateless people who live in the UK (Regulation 2018/1806, Art. 6(2)). The 2023 EU notice shows most states do, 'subject to reciprocity and overall EU–UK relations'.",
@@ -5963,6 +6150,11 @@
    ],
    "sources": [
     {
+     "label": "Swiss Regional Consular Centre London — Do I require a visa?",
+     "url": "https://static.tlscontact.com/media/gb/do_i_require_a_visa.pdf",
+     "kind": "official"
+    },
+    {
      "label": "EU Regulation 2018/1806, Art. 6(2)",
      "url": "https://eur-lex.europa.eu/eli/reg/2018/1806/2025-12-30/eng",
      "kind": "official"
@@ -5970,16 +6162,6 @@
     {
      "label": "EU notice of Member State visa exemptions (2023/C 340)",
      "url": "https://eur-lex.europa.eu/legal-content/EN/TXT/HTML/?uri=CELEX%3A52023XC0927%2801%29",
-     "kind": "official"
-    },
-    {
-     "label": "BRPTravel — UK refugee travel document guide (secondary, Aug 2026)",
-     "url": "https://brptravel.co.uk/guides/refugee-travel-document",
-     "kind": "secondary"
-    },
-    {
-     "label": "EU Entry/Exit System & ETIAS (official EU site)",
-     "url": "https://travel-europe.europa.eu/",
      "kind": "official"
     },
     {
@@ -5997,7 +6179,22 @@
     "zurich"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": {
+    "ctd": "visa_free",
+    "stateless": "visa_free",
+    "cot": "check"
+   },
+   "evidence": {
+    "quote": "UK travel document, issued to refugees by the Home Office, with blue cover ... do NOT require a Schengen visa for Switzerland [for visits of up to 90 days].",
+    "extra": "The Swiss guidance was last updated in June 2019 — still the published position, but older.",
+    "source": {
+     "label": "Swiss Regional Consular Centre London — Do I require a visa?",
+     "url": "https://static.tlscontact.com/media/gb/do_i_require_a_visa.pdf",
+     "kind": "official"
+    },
+    "checked": "2026-10-21"
+   }
   },
   {
    "name": "Syria",
@@ -6028,7 +6225,9 @@
    "demonyms": [
     "syrian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Taiwan",
@@ -6059,7 +6258,9 @@
     "taipei"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Tajikistan",
@@ -6088,7 +6289,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Tanzania",
@@ -6117,7 +6320,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Thailand",
@@ -6149,7 +6354,9 @@
     "phuket"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Timor-Leste",
@@ -6181,7 +6388,9 @@
     "timor leste"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Togo",
@@ -6210,7 +6419,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Tonga",
@@ -6239,7 +6450,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Trinidad and Tobago",
@@ -6251,9 +6464,9 @@
    "eu": false,
    "ets31": "none",
    "ets31_note": null,
-   "status": "visa_free",
+   "status": "check",
    "confidence": "low",
-   "summary": "Reported as visa-free for UK refugee travel document holders — confirm before booking.",
+   "summary": "Some guides report visa-free entry, but no official source confirms it — ask the embassy before booking.",
    "notes": [],
    "sources": [
     {
@@ -6273,7 +6486,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Tunisia",
@@ -6304,7 +6519,9 @@
    "demonyms": [
     "tunisian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Turkey",
@@ -6340,7 +6557,9 @@
    "demonyms": [
     "turkish"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Turkmenistan",
@@ -6369,7 +6588,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Tuvalu",
@@ -6398,7 +6619,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Uganda",
@@ -6429,7 +6652,9 @@
    "demonyms": [
     "ugandan"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Ukraine",
@@ -6460,7 +6685,9 @@
    "demonyms": [
     "ukrainian"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "United Arab Emirates",
@@ -6494,7 +6721,9 @@
     "emirates"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "United Kingdom",
@@ -6536,7 +6765,9 @@
     "northern ireland"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "United States",
@@ -6582,7 +6813,9 @@
     "california"
    ],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Uruguay",
@@ -6611,7 +6844,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Uzbekistan",
@@ -6640,7 +6875,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Vanuatu",
@@ -6669,7 +6906,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Venezuela",
@@ -6700,7 +6939,9 @@
    "demonyms": [
     "venezuelan"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Vietnam",
@@ -6731,7 +6972,9 @@
    "demonyms": [
     "vietnamese"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Yemen",
@@ -6762,7 +7005,9 @@
    "demonyms": [
     "yemeni"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Zambia",
@@ -6791,7 +7036,9 @@
    "fcdo_warning": false,
    "aliases": [],
    "demonyms": [],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   },
   {
    "name": "Zimbabwe",
@@ -6822,7 +7069,9 @@
    "demonyms": [
     "zimbabwean"
    ],
-   "reviewed": "2026-10-21"
+   "reviewed": "2026-10-21",
+   "by_doc": null,
+   "evidence": null
   }
  ]
 }

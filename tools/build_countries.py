@@ -9,6 +9,8 @@ Run:  pip install country_converter && python tools/build_countries.py
 
 Methodology (also shown in the app's "Data & sources" tab):
   * Every record has a STATUS and a CONFIDENCE level, plus the sources behind it.
+  * VERIFIED = the destination's own embassy/government page states the rule for UK-issued
+               travel documents; we store a verbatim quote, the URL and the date checked.
   * HIGH   = taken from an official legal/government source.
   * MEDIUM = official legal framework + consistent secondary reporting.
   * LOW    = general rule only, not individually verified for this country.
@@ -68,6 +70,64 @@ ETS31_SUSPENDED = {"FR": "France suspended it in 1986", "GB": "the UK suspended 
 SCHENGEN_REPORTED_VISA_FREE = {"DK", "FI", "DE", "GR", "IS", "IT", "LT", "LU", "MT", "NL",
                                "NO", "PL", "RO", "SI", "CH", "HR"}
 SCHENGEN_REPORTED_MAY_REQUIRE = {"FR", "ES", "AT", "BE"}
+
+# ── Embassy-verified rules (official page, verbatim quote, date checked) ────
+# These override everything else. "by_doc" gives the rule per UK document type:
+#   ctd = refugee (blue), stateless = stateless person's (red), cot = Certificate of Travel (black)
+VERIFIED = {
+    "DE": {"by_doc": {"ctd": "visa_free", "stateless": "visa_free", "cot": "visa_required"},
+           "quote": "Holders of a Refugee Convention Travel Document (1951) ... do not require a visa for travel to "
+                    "Germany provided that the duration of their stay does not exceed 90 days [in any 180-day period].",
+           "extra": "A British Certificate of Travel (black) requires a visa for any kind of stay. The document must "
+                    "have been issued within the last 10 years and be valid 3 months beyond departure.",
+           "source": {"label": "German Missions in the UK — travelling with UK travel documents",
+                      "url": "https://uk.diplo.de/uk-en/02/travelling-with-uk-travel-documents-2632112", "kind": "official"}},
+    "IT": {"by_doc": {"ctd": "visa_free", "stateless": "visa_free", "cot": "visa_required"},
+           "quote": "Holders of 1951 Geneva Refugee Convention Travel Document (Blue) and Holders of 1954 UN Convention "
+                    "Travel Document for Stateless (Red) issued in Great Britain can travel visa free up to 90 days.",
+           "extra": "Only for refugees and stateless persons who live in the UK. Certificate of Travel (black) holders "
+                    "need a visa.",
+           "source": {"label": "Consulate General of Italy in London — UK travel document",
+                      "url": "https://conslondra.esteri.it/en/servizi-consolari-e-visti/servizi-per-il-cittadino-straniero/visti/uk-travel-document/",
+                      "kind": "official"}},
+    "CH": {"by_doc": {"ctd": "visa_free", "stateless": "visa_free", "cot": "check"},
+           "quote": "UK travel document, issued to refugees by the Home Office, with blue cover ... do NOT require a "
+                    "Schengen visa for Switzerland [for visits of up to 90 days].",
+           "extra": "The Swiss guidance was last updated in June 2019 — still the published position, but older.",
+           "source": {"label": "Swiss Regional Consular Centre London — Do I require a visa?",
+                      "url": "https://static.tlscontact.com/media/gb/do_i_require_a_visa.pdf", "kind": "official"}},
+    "BE": {"by_doc": {"ctd": "visa_required", "stateless": "visa_required", "cot": "visa_required"},
+           "quote": "If you hold a blue travel document issued by the United Kingdom ... you do require a Schengen "
+                    "visa (type C) to travel to Belgium.",
+           "extra": "The same applies to the red stateless document. The black document is not recognised by the "
+                    "Benelux authorities without special authorisation (up to 85 days).",
+           "source": {"label": "Embassy of Belgium in the UK — UK travel documents",
+                      "url": "https://unitedkingdom.diplomatie.belgium.be/en/travel-belgium/visa-belgium/uk-travel-documents",
+                      "kind": "official"}},
+    "ES": {"by_doc": {"ctd": "visa_required", "stateless": "visa_required", "cot": "visa_required"},
+           "quote": "I am a holder of a refugee travel document issued under the 1951 Convention — Yes, you should "
+                    "apply for a Schengen visa.",
+           "extra": "The same answer is given for 1954 stateless travel documents.",
+           "source": {"label": "Consulate General of Spain in London — visa FAQs",
+                      "url": "https://www.exteriores.gob.es/DocumentosAuxiliaresSC/Reino%20Unido/LONDRES%20(C)/FAQs%20VISADOS.pdf",
+                      "kind": "official"}},
+}
+VERIFIED_CHECKED = "2026-10-21"
+
+
+def apply_verified(r):
+    v = VERIFIED.get(r["iso2"])
+    if not v:
+        return r
+    status = v["by_doc"]["ctd"]
+    r.update(status=status, confidence="verified", by_doc=v["by_doc"],
+             evidence={"quote": v["quote"], "extra": v["extra"], "source": v["source"], "checked": VERIFIED_CHECKED},
+             summary=("Visa-free for short stays (up to 90 days in 180) with a UK refugee travel document — "
+                      "confirmed by the embassy." if status == "visa_free" else
+                      "Visa required with a UK refugee travel document — confirmed by the embassy."))
+    r["sources"] = [v["source"]] + [x for x in r["sources"] if x["url"] != v["source"]["url"]]
+    return r
+
 
 # Official eVisa / online application portals (only ones we are confident exist).
 # NOTE: many eVisa systems are nationality-based and may not accept a travel document.
@@ -182,7 +242,7 @@ def base_record(name, iso2, iso3, region):
         "evisa_url": EVISA.get(iso2), "max_stay_days": 90,
         "validity_months": 6, "fcdo_warning": iso2 in FCDO_WARNING,
         "aliases": ALIASES.get(iso2, []), "demonyms": DEMONYMS.get(iso2, []),
-        "reviewed": REVIEWED,
+        "reviewed": REVIEWED, "by_doc": None, "evidence": None,
     }
 
 
@@ -207,17 +267,16 @@ def apply_rules(r):
             "issued within the last 10 years.",
             "Expect biometric registration (fingerprints and photo) at the border under the EU Entry/Exit System.",
         ]
-        if c in SCHENGEN_REPORTED_VISA_FREE:
-            r.update(status="visa_free", confidence="medium",
-                     summary="Usually visa-free for short stays (up to 90 days in 180) for UK refugee travel document holders.")
-            r["sources"] = src("eu_reg", "eu_notice", "brp", "ees")
-        else:
-            reason = ("Some sources report this country may now require a visa from UK travel document holders."
-                      if c in SCHENGEN_REPORTED_MAY_REQUIRE else
-                      "EU rules allow this country to exempt you, but we could not confirm that it does.")
-            r.update(status="check", confidence="medium",
-                     summary=f"Rules unclear — confirm with the embassy before booking. {reason}")
-            r["sources"] = src("eu_reg", "eu_notice", "brp", "embassies")
+        # Policy (v3.1): "visa-free" ONLY with an official, quoted, dated source (see VERIFIED below).
+        # Secondary guides were found to contradict embassies (e.g. Belgium), so they can't make a country visa-free.
+        reason = ("Some secondary guides say visa-free, but we have not found the embassy confirming it."
+                  if c in SCHENGEN_REPORTED_VISA_FREE else
+                  "Some sources report this country may require a visa from UK travel document holders."
+                  if c in SCHENGEN_REPORTED_MAY_REQUIRE else
+                  "EU rules allow this country to exempt you, but we could not confirm that it does.")
+        r.update(status="check", confidence="medium",
+                 summary=f"Not confirmed — ask the embassy before booking. {reason}")
+        r["sources"] = src("eu_reg", "eu_notice", "embassies")
         if r["ets31"] == "suspended" and c != "GB":
             r["notes"].append(f"This country is a party to ETS No. 31, but {r['ets31_note']}.")
         return r
@@ -232,23 +291,20 @@ def apply_rules(r):
                        "to travel document holders. No passport check on a route does not mean no visa is needed."]
         return r
     if c in {"SM", "VA"}:
-        r.update(status="visa_free", confidence="low",
-                 summary="Reached through Italy — if you can enter Italy visa-free, you can usually visit.",
-                 sources=src("eu_notice", "brp"))
+        r.update(status="visa_free", confidence="medium",
+                 summary="Reached only through Italy, with no border checks. Italy's consulate confirms UK refugee "
+                         "and stateless document holders can visit visa-free, so you can usually visit too.",
+                 sources=[VERIFIED["IT"]["source"]])
         return r
     if c in {"MC", "AD"}:
         r.update(status="check", confidence="low",
                  summary="Reached through France/Spain, which may require a visa from you — confirm first.",
                  sources=src("brp", "embassies"))
         return r
-    if c in {"AL", "XK", "MD"}:
-        r.update(status="visa_free", confidence="low",
-                 summary="Reported as visa-free for UK refugee travel document holders — confirm before booking.",
-                 sources=src("brp", "embassies"))
-        return r
-    if c == "TT":
-        r.update(status="visa_free", confidence="low",
-                 summary="Reported as visa-free for UK refugee travel document holders — confirm before booking.",
+    if c in {"AL", "XK", "MD", "TT"}:
+        r.update(status="check", confidence="low",
+                 summary="Some guides report visa-free entry, but no official source confirms it — ask the embassy "
+                         "before booking.",
                  sources=src("brp", "embassies"))
         return r
     if c == "CY":
@@ -301,7 +357,7 @@ def main():
     for e in EXTRAS:
         records.append(base_record(e["name"], e["iso2"], e["iso3"], e["region"]))
 
-    records = [apply_rules(r) for r in records]
+    records = [apply_verified(apply_rules(r)) for r in records]
     for r in records:  # every record carries the embassy list as a last resort source
         if SRC["embassies"] not in r["sources"]:
             r["sources"].append(SRC["embassies"])

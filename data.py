@@ -27,8 +27,10 @@ STATUS = {
 }
 
 CONFIDENCE = {
+    "verified": {"label": "Embassy-verified", "help": "The destination's own embassy or government states this rule "
+                                                     "for UK-issued travel documents. We keep the quote, link and date."},
     "high":   {"label": "High confidence",   "help": "Taken from an official government or treaty source."},
-    "medium": {"label": "Medium confidence", "help": "Official legal framework plus consistent secondary reporting."},
+    "medium": {"label": "Medium confidence", "help": "Official legal framework, but this country's rule is not confirmed by its embassy."},
     "low":    {"label": "General rule",      "help": "Safe general rule — not individually verified for this country."},
 }
 
@@ -170,7 +172,10 @@ VERIFIED LEGAL FACTS — never contradict these:
    UK residents "subject to reciprocity and overall EU-UK relations". Stays: 90 days in any 180,
    cumulative across Schengen. Document validity: 3 months beyond departure, issued within 10 years.
    Certificate of Travel holders are NOT covered by Art. 6(2).
-4. Paid work (including paid internships) always needs work authorisation, in every country.
+4. Schengen states decide individually. Embassy-verified (Oct 2026): Germany, Italy, Switzerland = visa-free
+   for UK blue/red documents (not the black Certificate of Travel); Belgium and Spain = Schengen visa required.
+   Every other Schengen state is unconfirmed: never call it visa-free.
+4b. Paid work (including paid internships) always needs work authorisation, in every country.
 5. A CTD is not valid for the holder's country of nationality; returning risks cessation (Art. 1C).
 6. USA: ESTA not available; a visa is needed, even for transit.
 7. Before travelling, the UKVI eVisa account must show the current travel document.
@@ -181,11 +186,6 @@ RULES FOR YOUR ANSWERS:
 - State the confidence level when it is not "high", and tell the user to confirm with the embassy.
 - Never tell users an embassy is "legally wrong" — rules have changed and embassies have discretion.
 - If a detail is missing (destination, purpose, length of stay), ask for ONE thing at a time.
+- When a visa or confirmation is needed, give the embassy or visa section contact from uk_contacts_fcdo_oct_2026
+  (never invent addresses, phone numbers or emails; if none are given, say so).
 """
-
-# Nearest UK city — embassies are in London, but many countries also have consulates
-# and visa application centres in other cities (official GOV.UK list linked in the app).
-UK_CITIES = ["London", "Manchester", "Birmingham", "Leeds", "Liverpool", "Newcastle", "Glasgow",
-             "Edinburgh", "Cardiff", "Belfast", "Bristol", "Other"]
-CONSULATES_LIST_URL = ("https://assets.publishing.service.gov.uk/media/6a96b6023b22fb169dc18fec/"
-                       "CONSULATES_OUTSIDE_LONDON_-_SEPTEMBER_2026.odt")

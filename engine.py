@@ -32,6 +32,7 @@ HEADLINES = {
 }
 
 LEAD_WEEKS = {"visa": 8, "evisa": 3, "check": 6}
+STALE_AFTER_DAYS = 180      # embassy evidence older than this no longer counts as "visa-free"
 
 # Country names that read naturally with "the" ("the embassy of the Netherlands")
 _THE = {"US", "GB", "NL", "PH", "BS", "GM", "CZ", "CF", "DO", "CD", "CG", "AE", "MV", "MH", "SB", "KM", "SC"}
@@ -52,10 +53,14 @@ def embassy_of(c: dict) -> str:
 
 
 def near_you(trip: "Trip") -> str:
-    """Embassies are in London, but many countries also have consulates or visa centres elsewhere."""
-    if trip.city and trip.city != "London":
-        return f" (or its consulate or visa application centre near {trip.city}, if it has one)"
-    return " or its consulate"
+    """Name the real nearest consulate (FCDO lists) when we know where the traveller lives."""
+    from contacts import nearest_office, directory
+    o = nearest_office(trip.destination, trip.city) if trip.city else None
+    if o:
+        return f" (or its consulate in {o['city']})"
+    d = directory(trip.destination)
+    has_consulates = bool(d and any(x["kind"] == "consulate" and not x["status"] for x in d["offices"]))
+    return " or one of its consulates" if has_consulates else ""
 
 
 @dataclass
@@ -149,9 +154,26 @@ def assess(trip: Trip, today: Optional[date] = None) -> Assessment:
         steps.append(Step("Country of nationality",
                           f"Your destination isn't your country of nationality, so your document can be used.", "pass"))
 
-    # ── 2. Destination's general rule for this document ─────────────────
-    status_text = c["summary"]
-    if trip.doc_type == "cot":
+    # ── 2. Destination's rule for this document ──────────────────────────
+    ev = c.get("evidence")
+    if c.get("by_doc"):
+        # Embassy-verified rule for this exact document type
+        doc_status = c["by_doc"][trip.doc_type]
+        verdict = BASE_VERDICT[doc_status]
+        confidence = "verified"
+        age = (today - date.fromisoformat(ev["checked"])).days
+        if age > STALE_AFTER_DAYS and verdict == "go":
+            # Safe by default: old evidence can't keep a country "visa-free"
+            verdict, confidence = "check", "medium"
+            steps.append(Step("Evidence is out of date",
+                              f"The embassy's position was last checked {age} days ago. Rules change, so treat it "
+                              "as unconfirmed until it has been re-checked.", "warn"))
+        outcome = {"go": "pass", "check": "warn", "evisa": "warn", "visa": "fail"}[verdict]
+        doc_word = DOC_TYPES[trip.doc_type]["short"].split(" (")[0].lower()
+        steps.append(Step(f"What {embassy_of(c)} says",
+                          f"“{ev['quote']}” {ev['extra']} (Checked {date.fromisoformat(ev['checked']):%d %b %Y}; "
+                          f"rule shown for a {doc_word}.)", outcome, ev["source"]))
+    elif trip.doc_type == "cot":
         if verdict in ("go", "check"):
             verdict = "visa"
             confidence = "medium"
@@ -162,7 +184,13 @@ def assess(trip: Trip, today: Optional[date] = None) -> Assessment:
     else:
         outcome = {"go": "pass", "check": "warn", "evisa": "warn", "visa": "fail"}[verdict]
         src = c["sources"][0] if c["sources"] else None
-        steps.append(Step(f"Entry rule for {c['name']}", status_text, outcome, src))
+        steps.append(Step(f"Entry rule for {c['name']}", c["summary"], outcome, src))
+
+    if c["schengen"] and verdict == "go":
+        steps.append(Step("Travelling on to other countries",
+                          f"This visa exemption is granted by {country_name(c)} itself. It doesn't cover other "
+                          "Schengen countries — for example, Belgium and Spain require a visa from UK travel "
+                          "document holders. Check every country you'll visit or pass through.", "warn"))
 
     if c["schengen"]:
         steps.append(Step("Schengen area",
@@ -282,7 +310,7 @@ def assess(trip: Trip, today: Optional[date] = None) -> Assessment:
 
     # ── Actions ──────────────────────────────────────────────────────────
     if verdict == "go":
-        if confidence != "high":
+        if confidence not in ("high", "verified"):
             actions.append(f"Email {embassy_of(c)}{near_you(trip)} to confirm — use the letter template below.")
         actions.append("Collect the documents in your checklist.")
     elif verdict == "check":
@@ -296,20 +324,27 @@ def assess(trip: Trip, today: Optional[date] = None) -> Assessment:
         actions.append(f"Book a visa appointment with {embassy_of(c)}{near_you(trip) if trip.city and trip.city != 'London' else ' or its visa application centre'}.")
     if verdict in ("check", "visa", "evisa"):
         actions.append("Don't pay for non-refundable flights until your entry is confirmed.")
+    if verdict in ("check", "visa", "evisa") or (verdict == "go" and confidence not in ("high", "verified")):
+        actions.append("Addresses, phone numbers and emails are under \u2018Where to apply\u2019 below.")
 
     headline = HEADLINES[verdict]
     if verdict == "stop" and any(s.title == "Document validity" and s.outcome == "fail" for s in steps):
         headline = "Renew your travel document first"
-    if verdict == "go" and confidence == "high":
+    if verdict == "go" and confidence in ("high", "verified"):
         headline = "No visa needed for this trip"
 
     summary = {
         "go": f"Short {purpose_label.lower()} trips to {country_name(c)} are usually visa-free with your document.",
-        "check": f"We can't confirm {c['name']}'s current rule for your document. Get written confirmation first.",
+        "check": f"We can't confirm the current rule in {country_name(c)} for your document. Get written confirmation first.",
         "evisa": f"{country_cap(c)} requires a visa. An online system exists, but check it accepts your document.",
         "visa": f"Apply to {embassy_of(c)} before you travel.",
         "stop": "There's a problem with this trip that needs fixing before you go.",
     }[verdict]
+    if verdict == "go" and confidence == "verified":
+        summary = (f"Short {purpose_label.lower()} trips to {country_name(c)} are visa-free with your document — "
+                   "confirmed by its embassy.")
+    if verdict == "visa" and confidence == "verified" and p != "paid_work":
+        summary = f"{country_cap(c)}'s embassy confirms you need a Schengen visa with this document. Apply before you travel."
     if p == "paid_work" and verdict == "visa":
         summary = f"Paid work in {country_name(c)} needs a work visa or permit, issued before you start."
 
@@ -341,7 +376,7 @@ def journey(a: Assessment) -> list[dict]:
     d = a.trip.depart
     fmt = lambda days: (d - timedelta(days=days)).strftime("%d %b %Y") if d else None  # noqa: E731
     steps = [{"title": "Check entry rules", "when": "Done", "detail": "You've assessed this trip with Secure Path."}]
-    if a.verdict in ("check",) or a.confidence != "high":
+    if a.verdict in ("check",) or a.confidence not in ("high", "verified"):
         steps.append({"title": "Confirm with the embassy", "when": fmt(70) or "~10 weeks before",
                       "detail": "Send the enquiry letter and keep the reply. Bring it with you."})
     if a.verdict in ("visa", "evisa"):
@@ -378,6 +413,21 @@ def trip_summary_md(a: Assessment) -> str:
         lines.append(f"- {icon[s.outcome]} **{s.title}** — {s.detail}")
     lines += ["", "## What to do next", ""] + [f"{i}. {x}" for i, x in enumerate(a.actions, 1)]
     lines += ["", "## Checklist", ""] + [f"- [ ] {x}" for x in checklist(a)]
+    from contacts import directory
+    d = directory(t.destination, t.city)
+    if d:
+        lines += ["", "## Who to contact", ""]
+        def _fmt(r, kind):
+            bits = [f"**{kind}: {r['name']}**"]
+            bits += [x for x in [r.get("address"), ", ".join(r.get("phone") or []), ", ".join(r.get("email") or []),
+                                 r.get("website")] if x]
+            return "- " + " — ".join(bits)
+        if d["embassy"]:
+            lines.append(_fmt(d["embassy"], "Embassy"))
+        lines += [_fmt(x, "Visa & consular section") for x in d["consular"]]
+        lines += [_fmt(o, "Consulate" if o["kind"] == "consulate" else "Honorary consulate")
+                  for o in d["offices"][:3] if not o["status"]]
+        lines.append("_From the FCDO's London Diplomatic List and consular lists (October 2026)._")
     lines += ["", "## Sources", ""] + [f"- {s['label']}: {s['url']}" for s in c["sources"]]
     lines += ["", "_Guidance only — not legal advice. Always confirm with the embassy before travelling._"]
     return "\n".join(lines)
@@ -392,7 +442,11 @@ def embassy_letter(a: Assessment, name: str = "[Your name]") -> str:
         "refugees and stateless persons residing in the United Kingdom from the visa requirement, and I would "
         "be grateful if you could confirm whether this exemption applies to me.\n"
         if c["schengen"] and t.doc_type != "cot" else "")
-    return f"""Subject: Visa requirement enquiry — holder of a UK {doc['name']}
+    from contacts import directory
+    d = directory(t.destination, t.city) or {}
+    emails = [e for r in (d.get("consular") or []) + ([d["embassy"]] if d.get("embassy") else []) for e in r["email"]]
+    to_line = f"To: {emails[0]}\n" if emails else ""
+    return to_line + f"""Subject: Visa requirement enquiry — holder of a UK {doc['name']}
 
 Dear Consular Section, Embassy of {country_name(c)},
 

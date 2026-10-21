@@ -6,6 +6,7 @@ Every status is shown with an icon AND a word, never colour alone.
 """
 
 from html import escape
+import re
 
 import streamlit as st
 
@@ -132,6 +133,7 @@ LOGO = """<svg width="38" height="38" viewBox="0 0 40 40" aria-hidden="true">
 
 def inject_css():
     st.markdown(CSS, unsafe_allow_html=True)
+    st.markdown(CONTACT_CSS, unsafe_allow_html=True)
 
 
 def header():
@@ -157,7 +159,10 @@ def status_chip(status: str) -> str:
 
 
 def confidence_chip(level: str) -> str:
-    fg, bg, bd = TONES[{"high": "green", "medium": "blue", "low": "grey"}[level]]
+    fg, bg, bd = TONES[{"verified": "green", "high": "green", "medium": "blue", "low": "grey"}[level]]
+    if level == "verified":
+        return (f'<span class="chip" title="{escape(CONFIDENCE[level]["help"])}" '
+                f'style="color:{fg};background:{bg};border-color:{bd}">✓ {CONFIDENCE[level]["label"]}</span>')
     return (f'<span class="chip" title="{escape(CONFIDENCE[level]["help"])}" '
             f'style="color:{fg};background:{bg};border-color:{bd}">{CONFIDENCE[level]["label"]}</span>')
 
@@ -237,3 +242,54 @@ def eyebrow(text: str):
 
 def lead(text: str):
     st.markdown(f'<p class="lead">{text}</p>', unsafe_allow_html=True)
+
+
+# ── Embassy & consulate contact cards ───────────────────────────────────────
+CONTACT_CSS = """
+<style>
+.ct{border:1px solid var(--line);border-radius:14px;padding:0.95rem 1.05rem;background:#fff;margin-bottom:0.7rem;}
+.ct.hl{border-color:#93C5FD;background:#F8FBFF;}
+.ct .top{display:flex;justify-content:space-between;gap:0.6rem;align-items:flex-start;flex-wrap:wrap;}
+.ct .nm{font-weight:600;color:var(--ink);font-size:0.97rem;}
+.ct .kd{font-size:0.72rem;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:var(--soft);margin-bottom:0.1rem;}
+.ct .rows{margin-top:0.45rem;display:grid;gap:0.25rem;font-size:0.9rem;color:#334155;}
+.ct .rows a{color:var(--brand);text-decoration:none;}
+.ct .rows .k{display:inline-block;width:1.4rem;color:var(--soft);}
+.ct .ar{font-size:0.8rem;color:var(--muted);margin-top:0.45rem;}
+</style>
+"""
+
+
+def contact_card(rec: dict, kind: str, highlight: bool = False, distance: str | None = None,
+                 covers: bool = False):
+    from contacts import maps_url, tel_url
+    chips = []
+    if rec.get("status"):
+        chips.append(f'<span class="chip" style="color:#B45309;background:#FFFBEB;border-color:#FDE68A">'
+                     f'{escape(rec["status"])}</span>')
+    if covers:
+        chips.append('<span class="chip" style="color:#15803D;background:#F0FDF4;border-color:#BBF7D0">'
+                     '✓ Covers your area</span>')
+    if distance:
+        chips.append(plain_chip(distance))
+    rows = []
+    if rec.get("address"):
+        rows.append(f'<div><span class="k">📍</span>{escape(rec["address"])} · '
+                    f'<a href="{maps_url(rec["address"])}" target="_blank" rel="noopener">Map ↗</a></div>')
+    for p in rec.get("phone") or []:
+        rows.append(f'<div><span class="k">☎</span><a href="{tel_url(p)}">{escape(p)}</a></div>')
+    for e in rec.get("email") or []:
+        rows.append(f'<div><span class="k">✉</span><a href="mailto:{escape(e)}">{escape(e)}</a></div>')
+    if rec.get("website"):
+        w = rec["website"]
+        short = re.sub(r"^https?://(www[.])?", "", w).rstrip("/")
+        rows.append(f'<div><span class="k">🌐</span><a href="{escape(w)}" target="_blank" rel="noopener">'
+                    f'{escape(short)} ↗</a></div>')
+    for h in rec.get("hours") or []:
+        rows.append(f'<div><span class="k">🕘</span>{escape(h)}</div>')
+    if not rows and not rec.get("status"):
+        rows.append('<div style="color:#64748B">No public contact details listed — try the embassy.</div>')
+    area = f'<div class="ar">Covers: {escape(rec["area"])}</div>' if rec.get("area") else ""
+    st.markdown(f'<div class="ct {"hl" if highlight else ""}"><div class="top"><div><div class="kd">{escape(kind)}</div>'
+                f'<div class="nm">{escape(rec.get("name") or "")}</div></div><div class="chips">{"".join(chips)}</div></div>'
+                f'<div class="rows">{"".join(rows)}</div>{area}</div>', unsafe_allow_html=True)

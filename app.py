@@ -12,8 +12,9 @@ import pandas as pd
 import streamlit as st
 
 from data import (COUNTRIES, DESTINATIONS, PURPOSES, DOC_TYPES, STATUS, CONFIDENCE, SOURCES, FAQ,
-                  DATA_REVIEWED, UK_CITIES, CONSULATES_LIST_URL)
-from engine import Trip, assess, checklist, journey, trip_summary_md, embassy_letter
+                  DATA_REVIEWED)
+from engine import Trip, assess, checklist, journey, trip_summary_md, embassy_letter, country_name
+from contacts import directory, nearest_office, UK_CITIES, META as CONTACTS_META
 from adviser import TripState, respond
 import ui
 
@@ -39,6 +40,49 @@ def quick_start(dest, purpose, days):
                             ret=TODAY + timedelta(days=45 + days))
 
 
+def render_directory(iso: str, home: str | None):
+    """Embassy, visa/consular sections and offices near the user — from the FCDO lists."""
+    d = directory(iso, home)
+    c = COUNTRIES[iso]
+    if not d:
+        ui.callout("No office listed in the UK",
+                   f"The FCDO lists don't show an embassy or consulate for {country_name(c)}. Its nearest embassy "
+                   "is usually in another European capital — search the country's foreign ministry website.", "amber")
+        return
+    if d["closed"] or (d["embassy"] and d["embassy"].get("status")):
+        ui.callout("Embassy temporarily closed",
+                   "The FCDO list shows this embassy as closed. Contact a consulate below, or the country's "
+                   "embassy in another European capital.", "amber")
+    if d["non_resident_in"]:
+        ui.callout(f"No embassy in the UK — covered from {d['non_resident_in']}",
+                   f"{country_name(c)[0].upper() + country_name(c)[1:]}'s ambassador to the UK is based in "
+                   f"{d['non_resident_in']}. Contact that embassy below, or an honorary consul in the UK if one is "
+                   "listed.", "blue")
+    if d["embassy"]:
+        ui.contact_card(d["embassy"], "Embassy" if not d["non_resident_in"] else f"Embassy (in {d['non_resident_in']})")
+    for sec in d["consular"]:
+        ui.contact_card(sec, "Visa & consular section")
+    if d["offices"]:
+        st.markdown(f"**{'Offices nearest ' + home if home else 'Consulates and honorary consuls in the UK'}**"
+                    + ("" if home else " · choose where you live to sort by distance"))
+        shown = d["offices"][:4] if home else d["offices"][:6]
+        for o in shown:
+            dist = (f"{o['km']} km away" if o["km"] else f"In {home}") if home and o["km"] is not None else None
+            ui.contact_card(o, "Consulate" if o["kind"] == "consulate" else "Honorary consulate",
+                            covers=o["covers_you"], distance=dist)
+        rest = d["offices"][len(shown):]
+        if rest:
+            with st.expander(f"Show {len(rest)} more office{'s' if len(rest) > 1 else ''}"):
+                for o in rest:
+                    ui.contact_card(o, "Consulate" if o["kind"] == "consulate" else "Honorary consulate",
+                                    covers=o["covers_you"],
+                                    distance=f"{o['km']} km away" if home and o["km"] else None)
+        st.caption("Honorary consuls are volunteers who represent a country locally. Most can't issue visas, but "
+                   "they can often answer questions — phone before you visit.")
+    st.markdown(f'<p class="fine">Source: {CONTACTS_META["source"]} (FCDO, revised {CONTACTS_META["revised"]}). '
+                'Only public office details are shown.</p>', unsafe_allow_html=True)
+
+
 tab_check, tab_map, tab_ai, tab_rights, tab_data = st.tabs(
     ["Check a trip", "World map", "Ask the adviser", "Your rights", "Data & sources"])
 
@@ -60,15 +104,14 @@ with tab_check:
             st.selectbox("Your travel document", list(DOC_TYPES), key="doc",
                          format_func=lambda k: DOC_TYPES[k]["short"],
                          help="Not sure? The blue document with '1951 Convention' on the cover is a CTD.")
+            st.selectbox("Where do you live? (optional)", UK_CITIES, key="city", placeholder="Choose the nearest city",
+                         help="We'll show the embassy, plus any consulate or honorary consul near you.")
             with st.expander("More accurate result (optional)"):
                 st.selectbox("Country of nationality", ALL_CODES, key="origin", format_func=label,
                              placeholder="Choose a country",
                              help="Refugee travel documents aren't valid for your country of nationality.")
                 st.date_input("Document expiry date", key="expiry", min_value=TODAY,
                               format="DD/MM/YYYY")
-                st.selectbox("Nearest UK city", UK_CITIES, key="city", placeholder="Choose a city",
-                             help="Embassies are in London, but many countries also have consulates or visa "
-                                  "application centres in cities such as Manchester, Birmingham and Edinburgh.")
                 st.caption("Nothing you enter is stored. It stays in this browser session only.")
 
     with right:
@@ -91,7 +134,7 @@ and exactly what to do next. Or try one of these:</div></div>""", unsafe_allow_h
             trip = Trip(destination=st.session_state.dest, purpose=st.session_state.purpose, days=days,
                         doc_type=st.session_state.doc, origin=st.session_state.origin,
                         depart=st.session_state.depart, doc_expiry=st.session_state.expiry,
-                        city=st.session_state.city if st.session_state.city != "Other" else None)
+                        city=st.session_state.city)
             a = assess(trip)
             ui.verdict_card(a, [ui.plain_chip(f"{days} days · {PURPOSES[trip.purpose]}")])
 
@@ -100,8 +143,19 @@ and exactly what to do next. Or try one of these:</div></div>""", unsafe_allow_h
                 ui.eyebrow("What to do next")
                 ui.action_list(a.actions)
 
+            near = nearest_office(trip.destination, trip.city) if a.verdict in ("visa", "evisa", "check") else None
+            if near:
+                st.write("")
+                ui.eyebrow(f"Your nearest office")
+                ui.contact_card(near, "Consulate" if near["kind"] == "consulate" else "Honorary consulate",
+                                highlight=True, covers=near["covers_you"],
+                                distance=(f"{near['km']} km from {trip.city}" if near["km"] else f"In {trip.city}"))
+
             st.write("")
-            t_how, t_list, t_plan, t_letter = st.tabs(["How we decided", "Checklist", "Timeline", "Embassy letter"])
+            t_how, t_where, t_list, t_plan, t_letter = st.tabs(
+                ["How we decided", "Where to apply", "Checklist", "Timeline", "Embassy letter"])
+            with t_where:
+                render_directory(trip.destination, trip.city)
             with t_how:
                 ui.step_list(a.steps)
             with t_list:
@@ -122,13 +176,9 @@ and exactly what to do next. Or try one of these:</div></div>""", unsafe_allow_h
                                    use_container_width=True)
 
             st.write("")
-            d1, d2, d3 = st.columns([4, 3, 3])
-            d1.download_button("⬇  Download trip summary", trip_summary_md(a),
+            st.download_button("⬇  Download trip summary (with contacts)", trip_summary_md(a),
                                file_name=f"secure-path-{a.country['name'].lower().replace(' ', '-')}.md",
                                use_container_width=True, type="primary")
-            d2.link_button("Embassies in the UK ↗", SOURCES["embassies"]["url"], use_container_width=True)
-            d3.link_button("Consulates outside London ↗", CONSULATES_LIST_URL, use_container_width=True,
-                           help="Official GOV.UK list of consulates in cities such as Manchester (Sept 2026)")
             st.markdown(f'<p class="fine">Guidance only — not legal advice. Rules change; always confirm with the '
                         f'embassy before you travel. Country data reviewed {DATA_REVIEWED}.</p>',
                         unsafe_allow_html=True)
@@ -137,11 +187,12 @@ and exactly what to do next. Or try one of these:</div></div>""", unsafe_allow_h
 # 2 · WORLD MAP
 # ═════════════════════════════════════════════════════════════════════════════
 with tab_map:
-    ui.lead("Entry rules for UK refugee travel document holders, country by country. Every country shows "
-            "how confident we are and where the information comes from.")
+    ui.lead("Entry rules for UK refugee travel document holders, country by country. A country is only shown as "
+            "visa-free when its own embassy says so — we keep the quote, the link and the date we checked it.")
     rows = [c for c in COUNTRIES.values()]
     counts = {s: sum(1 for c in rows if c["status"] == s) for s in STATUS}
-    ui.tiles([(len(rows), "countries covered", None)] +
+    n_ver = sum(1 for c in rows if c["confidence"] == "verified")
+    ui.tiles([(len(rows), "countries covered", None), (n_ver, "embassy-verified", None)] +
              [(counts[s], STATUS[s]["label"], STATUS[s]["color"]) for s in ("visa_free", "evisa", "check", "visa_required")])
 
     f1, f2, f3 = st.columns([3, 3, 2])
@@ -196,10 +247,20 @@ with tab_map:
         st.markdown(f"### {c['flag']} {c['name']}")
         st.markdown(ui.status_chip(c["status"]) + " " + ui.confidence_chip(c["confidence"]), unsafe_allow_html=True)
         st.write(c["summary"])
+        if c.get("evidence"):
+            ev = c["evidence"]
+            st.markdown(f"> “{ev['quote']}”\n>\n> — [{ev['source']['label']}]({ev['source']['url']}), "
+                        f"checked {ev['checked']}")
+            st.caption(ev["extra"])
+            if c.get("by_doc"):
+                st.markdown(" · ".join(f"**{DOC_TYPES[k]['short']}:** {STATUS[v]['label']}"
+                                       for k, v in c["by_doc"].items()))
         for n in c["notes"]:
             st.markdown(f"- {n}")
         if c["evisa_url"]:
             st.markdown(f"**Official online system:** [{c['evisa_url']}]({c['evisa_url']})")
+        with st.expander("Embassy and consulates in the UK"):
+            render_directory(pick, st.session_state.city)
         st.markdown("**Sources:** " + " · ".join(f"[{s['label']}]({s['url']})" for s in c["sources"]))
 
 # ═════════════════════════════════════════════════════════════════════════════
@@ -346,7 +407,7 @@ with tab_data:
                "suspended the agreement.", "blue")
 
     ui.eyebrow("Confidence levels")
-    cc = st.columns(3)
+    cc = st.columns(len(CONFIDENCE))
     for col, (k, v) in zip(cc, CONFIDENCE.items()):
         n = sum(1 for c in COUNTRIES.values() if c["confidence"] == k)
         with col:
@@ -367,9 +428,21 @@ explains the engine's verdict but can't change it.
 """)
     st.write("")
     ui.eyebrow("Design principle: safe by default")
-    st.markdown("Where we can't confirm a rule, we say **visa required** or **confirm before booking**, never "
-                "visa-free. Wrongly telling someone they can travel visa-free costs far more (a refused boarding or "
-                "entry) than wrongly telling them to check.")
+    st.markdown("A country is shown as **visa-free only when its own embassy or government says so** for UK-issued "
+                "travel documents. Treaty lists, secondary guides and online summaries can't make a country "
+                "visa-free here: in October 2026 they disagreed with the Belgian and Spanish embassies, which both "
+                "require a Schengen visa. Wrongly telling someone they can travel visa-free costs far more (refused "
+                "boarding or entry) than telling them to check.")
+    st.write("")
+    ui.eyebrow("How the data stays accurate")
+    st.markdown("""
+1. **Evidence, not claims:** every embassy-verified rule stores a verbatim quote, the official URL and the date checked.
+2. **Rules per document:** blue, red and black documents are recorded separately, because embassies treat them differently.
+3. **Expiry:** evidence older than 180 days automatically stops counting as visa-free and falls back to "confirm".
+4. **Change monitoring:** a script (`tools/monitor_sources.py`) re-fetches each official page and flags any change for human review.
+5. **Written confirmation:** for unverified countries, the app drafts a letter so travellers get the embassy's answer in writing.
+6. **Reports from users:** anyone can report outdated information (below); in a live service, reports go to a review queue.
+""")
     st.write("")
     ui.eyebrow("Sources")
     for s in SOURCES.values():

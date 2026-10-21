@@ -21,7 +21,7 @@ def test_world_coverage():
 def test_every_country_has_status_confidence_and_source():
     for c in COUNTRIES.values():
         assert c["status"] in {"visa_free", "evisa", "visa_required", "check", "issuer"}, c["name"]
-        assert c["confidence"] in {"high", "medium", "low"}, c["name"]
+        assert c["confidence"] in {"verified", "high", "medium", "low"}, c["name"]
         assert c["sources"], c["name"]
         assert c["summary"], c["name"]
 
@@ -166,3 +166,82 @@ def test_faq_and_reset():
     s = TripState(destination="DE")
     respond("start over", s, [])
     assert s.destination is None
+
+
+# ── Evidence policy (v3.1): visa-free only with official, quoted, dated evidence ─
+def test_visa_free_requires_official_evidence():
+    for c in COUNTRIES.values():
+        if c["status"] == "visa_free":
+            assert c["confidence"] == "verified" or c["iso2"] in {"SM", "VA"}, c["name"]
+
+
+def test_verified_entries_have_quote_url_and_date():
+    verified = [c for c in COUNTRIES.values() if c["confidence"] == "verified"]
+    assert {c["iso2"] for c in verified} >= {"DE", "IT", "CH", "BE", "ES"}
+    for c in verified:
+        ev = c["evidence"]
+        assert ev["quote"] and ev["source"]["url"].startswith("https://") and ev["checked"]
+        assert set(c["by_doc"]) == {"ctd", "stateless", "cot"}
+
+
+def test_embassy_verified_outcomes_by_document():
+    assert run("DE").verdict == "go" and run("DE").confidence == "verified"
+    assert run("DE", doc_type="cot").verdict == "visa"      # German page: black document needs a visa
+    assert run("BE").verdict == "visa"                       # Belgian embassy: blue document needs a Schengen visa
+    assert run("ES", doc_type="stateless").verdict == "visa"
+    assert run("NL").verdict == "check"                      # not confirmed by an embassy → never visa-free
+
+
+def test_stale_evidence_falls_back_to_check():
+    a = assess(Trip(destination="DE", purpose="tourism", days=10), today=date(2027, 9, 1))
+    assert a.verdict == "check"
+
+
+def test_onward_travel_warning_for_national_exemptions():
+    assert any(s.title == "Travelling on to other countries" for s in run("IT").steps)
+
+
+# ── Embassy & consulate directory (FCDO lists, Oct 2026) ────────────────────
+import re  # noqa: E402
+from contacts import MISSIONS, directory, nearest_office, best_visa_contact  # noqa: E402
+
+
+def _all_records():
+    for iso, m in MISSIONS.items():
+        for r in ([m["embassy"]] if m["embassy"] else []) + m["consular"] + m["consulates"] + m["honorary"]:
+            yield iso, r
+
+
+def test_directory_covers_almost_every_country():
+    assert len(MISSIONS) >= 185
+    assert sum(1 for m in MISSIONS.values() if m["embassy"]) >= 180
+
+
+def test_no_personal_names_in_contact_data():
+    """Diplomats' names are personal data and are never stored — only office details."""
+    person = re.compile(r"\b(Mr|Mrs|Ms|Miss|Dr|Excellency|Princess|Prince(?![’']s Gate| Consort)|Earl|Alderman|Revd|Honorary Consul\b)\b"
+                        r"|\b[A-Z]{3,} [A-Z]{3,} [A-Z]{3,}\b")
+    for iso, r in _all_records():
+        assert not person.search(r["address"]), (iso, r["address"])
+
+
+def test_addresses_do_not_contain_phone_numbers_or_emails():
+    for iso, r in _all_records():
+        assert "@" not in r["address"], (iso, r["address"])
+        assert not re.search(r"\b0\d{3} ?\d{3} ?\d{4}\b", r["address"]), (iso, r["address"])
+
+
+def test_known_offices():
+    es = directory("ES", "Manchester")
+    assert es["offices"][0]["city"] == "Manchester" and es["offices"][0]["kind"] == "consulate"
+    assert nearest_office("PK", "Leeds")["city"] == "Bradford"
+    assert "Visa" in best_visa_contact("EG")["name"]
+    assert directory("AU")["embassy"]["name"] == "Australian High Commission"   # not overwritten by Agents General
+    assert directory("AD")["non_resident_in"] == "Andorra"
+
+
+def test_trip_actions_name_the_real_consulate():
+    a = assess(Trip(destination="ES", purpose="tourism", days=10, city="Manchester"), today=TODAY)
+    assert "consulate in Manchester" in a.actions[0]
+    a = assess(Trip(destination="EG", purpose="tourism", days=10), today=TODAY)
+    assert all("consulates" not in x for x in a.actions)   # Egypt has none outside London

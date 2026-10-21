@@ -171,9 +171,17 @@ def _demo_text(a: Assessment, state: TripState, assumed_days: bool) -> str:
     c = a.country
     lines = [f"{_icon(a.verdict)} **{a.headline}** — {c['flag']} {c['name']}", "", a.summary]
     if a.actions:
-        lines += ["", "**Next steps**"] + [f"{i}. {x}" for i, x in enumerate(a.actions[:3], 1)]
+        acts = [x for x in a.actions if "Where to apply" not in x]   # that tab only exists in the Trip Checker
+        lines += ["", "**Next steps**"] + [f"{i}. {x}" for i, x in enumerate(acts[:3], 1)]
+    if a.verdict in ("visa", "evisa", "check"):
+        from contacts import best_visa_contact
+        o = best_visa_contact(c["iso2"])
+        if o:
+            bits = [x for x in [o.get("address"), (o.get("phone") or [None])[0], (o.get("email") or [None])[0]] if x]
+            where = f" (no embassy in the UK — covered from {o['non_resident_in']})" if o["non_resident_in"] else ""
+            lines += ["", f"📍 **{o['name']}**{where} · " + " · ".join(bits)]
     notes = []
-    if a.confidence != "high":
+    if a.confidence not in ("high", "verified"):
         notes.append(f"{CONFIDENCE[a.confidence]['label']} — confirm with the embassy")
     if assumed_days:
         notes.append("I've assumed a short stay under 90 days — tell me if it's longer")
@@ -248,12 +256,25 @@ def respond(message: str, state: TripState, history: list, api: Optional[dict] =
 
 
 # ── Live LLM ────────────────────────────────────────────────────────────────
+def _contacts_for(iso: str) -> dict | None:
+    from contacts import directory
+    d = directory(iso)
+    if not d:
+        return None
+    pick = lambda r: {k: r.get(k) for k in ("name", "address", "phone", "email", "website")}  # noqa: E731
+    return {"embassy": pick(d["embassy"]) if d["embassy"] else None,
+            "visa_sections": [pick(x) for x in d["consular"]],
+            "consulates": [pick(o) | {"city": o["city"]} for o in d["offices"] if o["kind"] == "consulate"][:5],
+            "non_resident_in": d["non_resident_in"]}
+
+
 def _live_text(message: str, history: list, a: Assessment, assumed_days: bool, api: dict) -> str:
     grounding = {
         "engine_result": a.to_dict(),
         "status_label": STATUS[a.country["status"]]["label"],
         "assumed_length": assumed_days,
         "reasoning_steps": [{"title": s.title, "detail": s.detail, "outcome": s.outcome} for s in a.steps],
+        "uk_contacts_fcdo_oct_2026": _contacts_for(a.country["iso2"]),
     }
     user = f"{message}\n\n[SECURE PATH ENGINE RESULT — authoritative]\n{json.dumps(grounding, default=str)}"
     # Providers need alternating turns that start with the user: drop leading assistant
