@@ -41,8 +41,21 @@ def country_name(c: dict) -> str:
     return ("the " if c["iso2"] in _THE else "") + c["name"]
 
 
+def country_cap(c: dict) -> str:
+    """Country name for the start of a sentence ("The Netherlands requires…")."""
+    n = country_name(c)
+    return n[0].upper() + n[1:]
+
+
 def embassy_of(c: dict) -> str:
     return f"the embassy of {country_name(c)}"
+
+
+def near_you(trip: "Trip") -> str:
+    """Embassies are in London, but many countries also have consulates or visa centres elsewhere."""
+    if trip.city and trip.city != "London":
+        return f" (or its consulate or visa application centre near {trip.city}, if it has one)"
+    return " or its consulate"
 
 
 @dataclass
@@ -54,6 +67,7 @@ class Trip:
     origin: Optional[str] = None        # ISO2 — country of nationality / country fled
     depart: Optional[date] = None
     doc_expiry: Optional[date] = None
+    city: Optional[str] = None          # nearest UK city, for consulates / visa centres
 
     @property
     def return_date(self) -> Optional[date]:
@@ -156,9 +170,9 @@ def assess(trip: Trip, today: Optional[date] = None) -> Assessment:
                           "combined. Your fingerprints and photo are recorded at the border (EU Entry/Exit System).",
                           "info", SOURCES["ees"]))
     if c["ets31"] != "none":
-        note = f", but it is {c['ets31_note']}" if c["ets31_note"] else ""
+        note = f", but {c['ets31_note']}" if c["ets31_note"] else ""
         steps.append(Step("ETS No. 31 (1959 refugee visa agreement)",
-                          f"{country_name(c)[0].upper() + country_name(c)[1:]} is a party to ETS No. 31{note}. "
+                          f"{country_cap(c)} is a party to ETS No. 31{note}. "
                           "However, the UK suspended the agreement in 2003, "
                           "and under Art. 7(2) UK-issued documents can't claim its benefits, so it doesn't decide "
                           "your entry.", "info", SOURCES["ets_text"]))
@@ -191,7 +205,7 @@ def assess(trip: Trip, today: Optional[date] = None) -> Assessment:
     elif p == "transit":
         if trip.destination in ("US", "CA"):
             verdict = _escalate(verdict, "visa")
-            steps.append(Step("Transit", f"{c['name']} requires a visa even to change planes.", "fail"))
+            steps.append(Step("Transit", f"{country_cap(c)} requires a visa even to change planes.", "fail"))
         else:
             steps.append(Step("Transit",
                               "Airport transit rules depend on the airport and your document. Ask the airline "
@@ -231,7 +245,7 @@ def assess(trip: Trip, today: Optional[date] = None) -> Assessment:
             if hard:
                 verdict = "stop"
             steps.append(Step("Document validity",
-                              f"{c['name']} expects about {c['validity_months']} months of validity after you "
+                              f"{country_cap(c)} expects about {c['validity_months']} months of validity after you "
                               f"leave (until {need:%d %b %Y}). Yours expires {trip.doc_expiry:%d %b %Y}.",
                               "fail" if hard else "warn"))
             actions.insert(0, "Renew your travel document before you travel, or check with the airline.")
@@ -240,7 +254,7 @@ def assess(trip: Trip, today: Optional[date] = None) -> Assessment:
                               f"Valid until {trip.doc_expiry:%d %b %Y} — enough for this trip.", "pass"))
     else:
         steps.append(Step("Document validity",
-                          f"Add your expiry date to check it. {c['name']} expects about {c['validity_months']} "
+                          f"Add your expiry date to check it. {country_cap(c)} expects about {c['validity_months']} "
                           "months of validity after you leave.", "info"))
 
     # ── 6. Timing ────────────────────────────────────────────────────────
@@ -269,17 +283,17 @@ def assess(trip: Trip, today: Optional[date] = None) -> Assessment:
     # ── Actions ──────────────────────────────────────────────────────────
     if verdict == "go":
         if confidence != "high":
-            actions.append(f"Email {embassy_of(c)} to confirm — use the letter template below.")
+            actions.append(f"Email {embassy_of(c)}{near_you(trip)} to confirm — use the letter template below.")
         actions.append("Collect the documents in your checklist.")
     elif verdict == "check":
-        actions.append(f"Ask {embassy_of(c)} in London, in writing, before booking anything.")
+        actions.append(f"Before booking anything, ask {embassy_of(c)}{near_you(trip)} in writing.")
     elif verdict == "evisa":
         if c.get("evisa_url"):
             actions.append(f"Check the official online system accepts a {doc['short'].split(' (')[0].lower()}: "
                            f"{c['evisa_url']}")
-        actions.append("If it doesn't, apply through the embassy in London.")
+        actions.append(f"If it doesn't, apply through {embassy_of(c)}{near_you(trip)}.")
     elif verdict == "visa" and p != "paid_work":
-        actions.append(f"Book a visa appointment with {embassy_of(c)} or its visa centre.")
+        actions.append(f"Book a visa appointment with {embassy_of(c)}{near_you(trip) if trip.city and trip.city != 'London' else ' or its visa application centre'}.")
     if verdict in ("check", "visa", "evisa"):
         actions.append("Don't pay for non-refundable flights until your entry is confirmed.")
 
@@ -290,14 +304,14 @@ def assess(trip: Trip, today: Optional[date] = None) -> Assessment:
         headline = "No visa needed for this trip"
 
     summary = {
-        "go": f"Short {purpose_label.lower()} trips to {c['name']} are usually visa-free with your document.",
+        "go": f"Short {purpose_label.lower()} trips to {country_name(c)} are usually visa-free with your document.",
         "check": f"We can't confirm {c['name']}'s current rule for your document. Get written confirmation first.",
-        "evisa": f"{c['name']} requires a visa. An online system exists, but check it accepts your document.",
+        "evisa": f"{country_cap(c)} requires a visa. An online system exists, but check it accepts your document.",
         "visa": f"Apply to {embassy_of(c)} before you travel.",
         "stop": "There's a problem with this trip that needs fixing before you go.",
     }[verdict]
     if p == "paid_work" and verdict == "visa":
-        summary = f"Paid work in {c['name']} needs a work visa or permit, issued before you start."
+        summary = f"Paid work in {country_name(c)} needs a work visa or permit, issued before you start."
 
     return Assessment(verdict, headline, summary, confidence, c, trip, steps,
                       [a for a in actions if a], apply_by)
@@ -380,7 +394,7 @@ def embassy_letter(a: Assessment, name: str = "[Your name]") -> str:
         if c["schengen"] and t.doc_type != "cot" else "")
     return f"""Subject: Visa requirement enquiry — holder of a UK {doc['name']}
 
-Dear Consular Section, Embassy of {country_name(c)} in London,
+Dear Consular Section, Embassy of {country_name(c)},
 
 I hold a {doc['name']} issued by the UK Home Office ({doc['basis']}). I live in the United Kingdom and have valid permission to stay.
 

@@ -137,7 +137,7 @@ FAQ = {
     "esta": (
         "**No, you can't use ESTA.** The US Visa Waiver Program needs a passport from a participating "
         "country. Travel document holders must apply for a visa (usually B1/B2) at the US Embassy in "
-        "London, and you need one even to change planes in the US."
+        "London (the only place in the UK that interviews visa applicants), and you need one even to change planes in the US."
     ),
     "evisa_uk": (
         "The UK has replaced most physical immigration documents (BRPs) with **eVisas**. Before you travel, "
@@ -182,3 +182,10 @@ RULES FOR YOUR ANSWERS:
 - Never tell users an embassy is "legally wrong" — rules have changed and embassies have discretion.
 - If a detail is missing (destination, purpose, length of stay), ask for ONE thing at a time.
 """
+
+# Nearest UK city — embassies are in London, but many countries also have consulates
+# and visa application centres in other cities (official GOV.UK list linked in the app).
+UK_CITIES = ["London", "Manchester", "Birmingham", "Leeds", "Liverpool", "Newcastle", "Glasgow",
+             "Edinburgh", "Cardiff", "Belfast", "Bristol", "Other"]
+CONSULATES_LIST_URL = ("https://assets.publishing.service.gov.uk/media/6a96b6023b22fb169dc18fec/"
+                       "CONSULATES_OUTSIDE_LONDON_-_SEPTEMBER_2026.odt")

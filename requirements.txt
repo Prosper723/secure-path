@@ -1,0 +1,6 @@
+streamlit>=1.40
+pandas>=2.0
+plotly>=5.20
+# Optional — only needed for Live AI mode
+anthropic>=0.40
+openai>=1.40

@@ -12,7 +12,7 @@ import pandas as pd
 import streamlit as st
 
 from data import (COUNTRIES, DESTINATIONS, PURPOSES, DOC_TYPES, STATUS, CONFIDENCE, SOURCES, FAQ,
-                  DATA_REVIEWED)
+                  DATA_REVIEWED, UK_CITIES, CONSULATES_LIST_URL)
 from engine import Trip, assess, checklist, journey, trip_summary_md, embassy_letter
 from adviser import TripState, respond
 import ui
@@ -29,7 +29,7 @@ label = lambda iso: f"{COUNTRIES[iso]['flag']}  {COUNTRIES[iso]['name']}"  # noq
 
 # ── Session defaults ────────────────────────────────────────────────────────
 for k, v in {"dest": None, "purpose": "tourism", "depart": TODAY + timedelta(days=45),
-             "ret": TODAY + timedelta(days=59), "doc": "ctd", "origin": None, "expiry": None,
+             "ret": TODAY + timedelta(days=59), "doc": "ctd", "origin": None, "expiry": None, "city": None,
              "chat": [], "trip_state": TripState(), "api_key": "", "provider": "anthropic"}.items():
     st.session_state.setdefault(k, v)
 
@@ -52,7 +52,7 @@ with tab_check:
         ui.eyebrow("Your trip")
         with st.container(border=True):
             st.selectbox("Where are you going?", DEST_CODES, key="dest", format_func=label,
-                         index=None, placeholder="Search 196 countries…")
+                         placeholder=f"Search {len(DEST_CODES)} countries…")
             st.selectbox("What's the trip for?", list(PURPOSES), key="purpose", format_func=PURPOSES.get)
             c1, c2 = st.columns(2)
             c1.date_input("Leaving", key="depart", min_value=TODAY, format="DD/MM/YYYY")
@@ -61,11 +61,14 @@ with tab_check:
                          format_func=lambda k: DOC_TYPES[k]["short"],
                          help="Not sure? The blue document with '1951 Convention' on the cover is a CTD.")
             with st.expander("More accurate result (optional)"):
-                st.selectbox("Country of nationality", ALL_CODES, key="origin", format_func=label, index=None,
+                st.selectbox("Country of nationality", ALL_CODES, key="origin", format_func=label,
                              placeholder="Choose a country",
                              help="Refugee travel documents aren't valid for your country of nationality.")
-                st.date_input("Document expiry date", key="expiry", value=None, min_value=TODAY,
+                st.date_input("Document expiry date", key="expiry", min_value=TODAY,
                               format="DD/MM/YYYY")
+                st.selectbox("Nearest UK city", UK_CITIES, key="city", placeholder="Choose a city",
+                             help="Embassies are in London, but many countries also have consulates or visa "
+                                  "application centres in cities such as Manchester, Birmingham and Edinburgh.")
                 st.caption("Nothing you enter is stored. It stays in this browser session only.")
 
     with right:
@@ -76,18 +79,19 @@ with tab_check:
 and exactly what to do next. Or try one of these:</div></div>""", unsafe_allow_html=True)
             st.write("")
             q1, q2, q3 = st.columns(3)
-            q1.button("💼 Paid internship · Romania", on_click=quick_start, args=("RO", "paid_work", 90),
+            q1.button("💼 Internship · Romania", on_click=quick_start, args=("RO", "paid_work", 90),
                       use_container_width=True)
             q2.button("🏖️ Holiday · Germany", on_click=quick_start, args=("DE", "tourism", 10),
                       use_container_width=True)
-            q3.button("👨‍👩‍👧 Family visit · USA", on_click=quick_start, args=("US", "family", 21),
+            q3.button("👪 Family · USA", on_click=quick_start, args=("US", "family", 21),
                       use_container_width=True)
         elif days < 1:
             ui.callout("Check your dates", "Your return date needs to be after your departure date.", "amber")
         else:
             trip = Trip(destination=st.session_state.dest, purpose=st.session_state.purpose, days=days,
                         doc_type=st.session_state.doc, origin=st.session_state.origin,
-                        depart=st.session_state.depart, doc_expiry=st.session_state.expiry)
+                        depart=st.session_state.depart, doc_expiry=st.session_state.expiry,
+                        city=st.session_state.city if st.session_state.city != "Other" else None)
             a = assess(trip)
             ui.verdict_card(a, [ui.plain_chip(f"{days} days · {PURPOSES[trip.purpose]}")])
 
@@ -110,7 +114,7 @@ and exactly what to do next. Or try one of these:</div></div>""", unsafe_allow_h
             with t_plan:
                 ui.timeline(journey(a))
             with t_letter:
-                st.caption("Ask the embassy to confirm the rules in writing, and keep their reply with your documents.")
+                st.caption("Send this to the embassy or a consulate, and keep their written reply with your documents.")
                 name = st.text_input("Your name", placeholder="As it appears on your travel document")
                 letter = embassy_letter(a, name or "[Your name]")
                 st.text_area("Email text", letter, height=330, label_visibility="collapsed")
@@ -118,11 +122,13 @@ and exactly what to do next. Or try one of these:</div></div>""", unsafe_allow_h
                                    use_container_width=True)
 
             st.write("")
-            d1, d2 = st.columns(2)
+            d1, d2, d3 = st.columns([4, 3, 3])
             d1.download_button("⬇  Download trip summary", trip_summary_md(a),
                                file_name=f"secure-path-{a.country['name'].lower().replace(' ', '-')}.md",
                                use_container_width=True, type="primary")
-            d2.link_button("Find the embassy in London ↗", SOURCES["embassies"]["url"], use_container_width=True)
+            d2.link_button("Embassies in the UK ↗", SOURCES["embassies"]["url"], use_container_width=True)
+            d3.link_button("Consulates outside London ↗", CONSULATES_LIST_URL, use_container_width=True,
+                           help="Official GOV.UK list of consulates in cities such as Manchester (Sept 2026)")
             st.markdown(f'<p class="fine">Guidance only — not legal advice. Rules change; always confirm with the '
                         f'embassy before you travel. Country data reviewed {DATA_REVIEWED}.</p>',
                         unsafe_allow_html=True)
@@ -165,7 +171,10 @@ with tab_map:
                           legend=dict(orientation="h", y=-0.02, x=0.5, xanchor="center", title=None,
                                       font=dict(size=12)),
                           font=dict(family="Inter, sans-serif"), dragmode=False)
-        st.plotly_chart(fig, use_container_width=True, config={"displayModeBar": False})
+        cfg = {"displayModeBar": False}
+        if os.getenv("SECURE_PATH_TOPOJSON_URL"):  # offline / locked-down networks: serve map outlines locally
+            cfg["topojsonURL"] = os.getenv("SECURE_PATH_TOPOJSON_URL")
+        st.plotly_chart(fig, use_container_width=True, config=cfg)
     except ImportError:
         ui.callout("Map unavailable", "Install plotly to see the world map: <code>pip install plotly</code>", "amber")
 
