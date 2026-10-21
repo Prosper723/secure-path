@@ -1,279 +1,398 @@
 """
-Secure Path — Eligibility Engine
-Reasoning logic for visa eligibility and document generation.
+Secure Path — trip assessment engine.
 
-Key legal rule encoded here:
-ETS No. 31 Article 1(2) — visa-free only for NON-GAINFUL purposes.
-Paid internships / employment = gainful → visa required even in ETS 31 countries.
+One function, assess(trip), turns a trip into an explainable decision:
+a verdict, a headline, and the ordered reasoning steps that produced it
+(each with an outcome and, where relevant, its legal source).
+
+The Trip Checker, the AI adviser (demo and live) and the exports all use
+this engine, so every part of the app gives the same answer.
 """
 
-from data import (
-    ETS_31_COUNTRIES, BILATERAL_COUNTRIES,
-    DOCUMENT_CHECKLISTS, CTD_INFO
-)
+from __future__ import annotations
 
-# Purposes that constitute "gainful employment" under ETS No. 31 Article 1(2)
-GAINFUL_PURPOSES = {"Paid Work / Internship"}
+from dataclasses import dataclass, field, asdict
+from datetime import date, timedelta
+from typing import Optional
 
-# Purposes that are explicitly non-gainful (visa-free preserved under ETS 31)
-NON_GAINFUL_PURPOSES = {
-    "Tourism / Holiday",
-    "Visiting Family / Friends",
-    "Voluntary Work / Work Experience",
-    "Business / Conference",  # attending, not working; depends on nature
+from data import (COUNTRIES, SOURCES, DOC_TYPES, PURPOSES, CHECKLIST_BASE, CHECKLIST_PURPOSE,
+                  CHECKLIST_VISA, DATA_REVIEWED)
+
+# Verdict severity: higher wins when rules combine.
+SEVERITY = {"go": 0, "check": 1, "evisa": 2, "visa": 3, "stop": 4, "home": 5}
+BASE_VERDICT = {"visa_free": "go", "check": "check", "evisa": "evisa", "visa_required": "visa", "issuer": "home"}
+
+HEADLINES = {
+    "go":    "Usually no visa needed for this trip",
+    "check": "Confirm with the embassy before you book",
+    "evisa": "You need a visa — you may be able to apply online",
+    "visa":  "You need a visa before you travel",
+    "stop":  "Don't travel on this plan",
+    "home":  "This is where your document was issued",
 }
 
+LEAD_WEEKS = {"visa": 8, "evisa": 3, "check": 6}
 
-def check_eligibility(destination: str, purpose: str, duration_days: int):
-    """
-    Core eligibility reasoning engine.
+# Country names that read naturally with "the" ("the embassy of the Netherlands")
+_THE = {"US", "GB", "NL", "PH", "BS", "GM", "CZ", "CF", "DO", "CD", "CG", "AE", "MV", "MH", "SB", "KM", "SC"}
 
-    ETS No. 31 Article 1(2) awareness:
-    - If purpose is gainful employment (paid work/internship), ETS 31 visa-free does NOT apply.
-    - If stay exceeds 90 days, ETS 31 visa-free does NOT apply.
-    - Both conditions independently trigger visa requirement.
 
-    Returns a structured result dict.
-    """
-    result = {
-        "destination": destination,
-        "purpose": purpose,
-        "duration_days": duration_days,
-        "visa_required": None,
-        "verdict": None,           # "visa_free" | "visa_required" | "check_required"
-        "verdict_label": None,
-        "legal_basis": None,
-        "key_message": None,
-        "warnings": [],
-        "evisa_required": False,
-        "evisa_info": None,
-        "important_note": None,
-        "article_1_2_applies": False,  # True when ETS 31 visa-free is blocked by gainful employment
-    }
+def country_name(c: dict) -> str:
+    return ("the " if c["iso2"] in _THE else "") + c["name"]
 
-    is_gainful = purpose in GAINFUL_PURPOSES
 
-    # ── Check ETS No. 31 countries ───────────────────────────────────────────
-    if destination in ETS_31_COUNTRIES:
-        info = ETS_31_COUNTRIES[destination]
-        allowed_days = info["days"]
+def embassy_of(c: dict) -> str:
+    return f"the embassy of {country_name(c)}"
 
-        if is_gainful:
-            # Article 1(2): paid work = gainful employment = visa required
-            result["visa_required"] = True
-            result["verdict"] = "visa_required"
-            result["verdict_label"] = "🔴 Work Visa Required"
-            result["article_1_2_applies"] = True
-            result["legal_basis"] = (
-                f"ETS No. 31 Article 1(2) — {destination} is an ETS No. 31 signatory, "
-                f"but the visa-free provisions apply only to non-gainful purposes. "
-                f"Paid work/internships constitute gainful employment and fall outside the treaty's protection."
-            )
-            result["key_message"] = (
-                f"⚠️ Even though {destination} is an ETS No. 31 signatory country, "
-                f"you CANNOT rely on visa-free entry for a paid internship or paid work. "
-                f"Paid employment is 'gainful' under Article 1(2) of the treaty, which means the "
-                f"visa-free exemption does not apply. You must apply for a work visa before travelling."
-            )
-            result["important_note"] = (
-                "This is a very common mistake. Many CTD holders assume that ETS No. 31 covers all "
-                "travel to signatory countries — but it explicitly excludes gainful employment. "
-                "Travelling to work without a work visa could result in refusal of entry or deportation."
-            )
 
-        elif duration_days > allowed_days:
-            # Duration exceeds visa-free limit
-            result["visa_required"] = True
-            result["verdict"] = "visa_required"
-            result["verdict_label"] = "⚠️ Long-Stay Visa Required"
-            result["legal_basis"] = (
-                f"ETS No. 31 covers stays up to {allowed_days} days. "
-                f"Your planned stay of {duration_days} days exceeds this limit."
-            )
-            result["key_message"] = (
-                f"Your stay of {duration_days} days exceeds the {allowed_days}-day visa-free limit "
-                f"under ETS No. 31. You will need to apply for a long-stay visa or residence permit "
-                f"from the {destination} embassy before travelling."
-            )
+@dataclass
+class Trip:
+    destination: str                    # ISO2
+    purpose: str = "tourism"            # key of PURPOSES
+    days: int = 7
+    doc_type: str = "ctd"               # key of DOC_TYPES
+    origin: Optional[str] = None        # ISO2 — country of nationality / country fled
+    depart: Optional[date] = None
+    doc_expiry: Optional[date] = None
 
-        else:
-            # Genuinely visa-free
-            result["visa_required"] = False
-            result["verdict"] = "visa_free"
-            result["verdict_label"] = "✅ No Visa Required"
-            result["legal_basis"] = (
-                f"1959 Strasbourg Agreement (ETS No. 31) — {destination} is a signatory state. "
-                f"CTD holders are exempt from visa requirements for non-gainful stays up to {allowed_days} days."
-            )
-            result["key_message"] = (
-                f"You do not need a visa to travel to {destination} for {duration_days} days. "
-                f"Your Convention Travel Document grants you visa-free access under international treaty law."
-            )
-            result["warnings"].append(
-                "⚠️ Some embassies may incorrectly advise you to obtain a visa. "
-                "They are legally wrong. If this happens, quote ETS No. 31 directly and request escalation."
-            )
+    @property
+    def return_date(self) -> Optional[date]:
+        return self.depart + timedelta(days=self.days) if self.depart else None
 
-    # ── Check bilateral agreement countries ──────────────────────────────────
-    elif destination in BILATERAL_COUNTRIES:
-        info = BILATERAL_COUNTRIES[destination]
-        result["visa_required"] = info["visa_required"]
-        result["evisa_required"] = info.get("evisa", False)
-        result["evisa_info"] = info.get("evisa_info")
 
-        if not info["visa_required"]:
-            result["verdict"] = "visa_free"
-            result["verdict_label"] = "✅ No Visa Required"
-            result["legal_basis"] = "Bilateral arrangement between UK and destination country."
-            result["key_message"] = (
-                f"You do not need a visa to travel to {destination} with a Convention Travel Document."
-            )
-            # Even in bilateral visa-free countries, work still requires a work visa
-            if is_gainful:
-                result["warnings"].append(
-                    "⚠️ Note: While short tourist visits may be visa-free, "
-                    "paid work requires a separate work visa regardless of any bilateral arrangement."
-                )
-        else:
-            result["verdict"] = "visa_required"
-            result["verdict_label"] = "🔴 Visa Required"
-            result["legal_basis"] = info["notes"]
-            result["key_message"] = (
-                f"A visa is required to travel to {destination} with a Convention Travel Document. "
-                f"Apply well in advance of your travel date."
-            )
-            if info.get("evisa"):
-                result["warnings"].append(
-                    f"🌐 eVisa required — apply online before travelling. {info['evisa_info']}"
-                )
+@dataclass
+class Step:
+    title: str
+    detail: str
+    outcome: str = "info"               # pass | warn | fail | info
+    source: Optional[dict] = None
 
+
+@dataclass
+class Assessment:
+    verdict: str
+    headline: str
+    summary: str
+    confidence: str
+    country: dict
+    trip: Trip
+    steps: list = field(default_factory=list)
+    actions: list = field(default_factory=list)
+    apply_by: Optional[date] = None
+
+    def to_dict(self) -> dict:
+        d = asdict(self)
+        d["trip"] = {k: (v.isoformat() if isinstance(v, date) else v) for k, v in d["trip"].items()}
+        d["apply_by"] = self.apply_by.isoformat() if self.apply_by else None
+        d["country"] = {k: self.country[k] for k in ("name", "iso2", "status", "confidence", "summary")}
+        return d
+
+
+def _escalate(current: str, new: str) -> str:
+    return new if SEVERITY[new] > SEVERITY[current] else current
+
+
+def _add_months(d: date, months: int) -> date:
+    m = d.month - 1 + months
+    y, m = d.year + m // 12, m % 12 + 1
+    return date(y, m, min(d.day, 28))
+
+
+def assess(trip: Trip, today: Optional[date] = None) -> Assessment:
+    today = today or date.today()
+    c = COUNTRIES[trip.destination]
+    doc = DOC_TYPES[trip.doc_type]
+    steps: list[Step] = []
+    actions: list[str] = []
+    confidence = c["confidence"]
+    purpose_label = PURPOSES[trip.purpose]
+
+    # ── 0. Issuing country ────────────────────────────────────────────────
+    if c["status"] == "issuer":
+        steps.append(Step("Destination is the UK",
+                          "Your document was issued by the UK, which guarantees your right to return.", "pass"))
+        return Assessment("home", HEADLINES["home"], c["summary"], "high", c, trip, steps,
+                          ["Choose a destination outside the UK."])
+
+    verdict = BASE_VERDICT[c["status"]]
+
+    # ── 1. Country of nationality ────────────────────────────────────────
+    if trip.origin and trip.origin == trip.destination:
+        if trip.doc_type == "ctd":
+            steps.append(Step(
+                "Your country of nationality",
+                f"A Convention Travel Document is not valid for {c['name']}. Going back, or getting that "
+                "country's passport, can lead to your refugee status being reviewed (1951 Convention, Art. 1C).",
+                "fail"))
+            actions = ["Don't book this trip on your CTD.",
+                       "Speak to an immigration solicitor or a refugee advice charity before considering it."]
+            return Assessment("stop", "Your CTD isn't valid for this country",
+                              "Refugee travel documents exclude your country of nationality. Travelling there "
+                              "could put your protection status at risk.", "high", c, trip, steps, actions)
+        steps.append(Step("Your former country", f"Check carefully whether {c['name']} will admit you on this "
+                          "document — get legal advice first.", "warn"))
+    elif trip.origin:
+        steps.append(Step("Country of nationality",
+                          f"Your destination isn't your country of nationality, so your document can be used.", "pass"))
+
+    # ── 2. Destination's general rule for this document ─────────────────
+    status_text = c["summary"]
+    if trip.doc_type == "cot":
+        if verdict in ("go", "check"):
+            verdict = "visa"
+            confidence = "medium"
+        status_text = (f"Certificate of Travel holders aren't covered by the refugee/stateless exemptions "
+                       f"that some UK document holders get, and some countries don't accept the document at all. "
+                       f"Plan on needing a visa for {c['name']}, and check that it recognises your document.")
+        steps.append(Step(f"Entry rule for {c['name']}", status_text, "warn"))
     else:
-        # Unknown country
-        result["verdict"] = "check_required"
-        result["verdict_label"] = "❓ Manual Check Required"
-        result["visa_required"] = None
-        result["legal_basis"] = "This country is not in our current database."
-        result["key_message"] = (
-            f"We don't have specific information for {destination} yet. "
-            f"Contact the embassy directly or consult the UNHCR travel advisory. "
-            f"Always ask specifically about Convention Travel Document / Refugee Travel Document holders."
-        )
+        outcome = {"go": "pass", "check": "warn", "evisa": "warn", "visa": "fail"}[verdict]
+        src = c["sources"][0] if c["sources"] else None
+        steps.append(Step(f"Entry rule for {c['name']}", status_text, outcome, src))
 
-    # ── Add purpose-specific note for voluntary work ─────────────────────────
-    if purpose == "Voluntary Work / Work Experience" and destination in ETS_31_COUNTRIES:
-        result["important_note"] = (
-            "Under Article 1(2) of ETS No. 31, unpaid voluntary work does NOT count as 'gainful employment'. "
-            "Your visa-free rights are fully preserved even if you are doing volunteer work. "
-            "If an embassy questions this, reference ETS No. 31 Article 1(2) directly."
-        )
+    if c["schengen"]:
+        steps.append(Step("Schengen area",
+                          "Short stays are capped at 90 days in any 180-day period across ALL Schengen countries "
+                          "combined. Your fingerprints and photo are recorded at the border (EU Entry/Exit System).",
+                          "info", SOURCES["ees"]))
+    if c["ets31"] != "none":
+        note = f", but it is {c['ets31_note']}" if c["ets31_note"] else ""
+        steps.append(Step("ETS No. 31 (1959 refugee visa agreement)",
+                          f"{country_name(c)[0].upper() + country_name(c)[1:]} is a party to ETS No. 31{note}. "
+                          "However, the UK suspended the agreement in 2003, "
+                          "and under Art. 7(2) UK-issued documents can't claim its benefits, so it doesn't decide "
+                          "your entry.", "info", SOURCES["ets_text"]))
 
-    return result
+    # ── 3. Purpose of the trip ───────────────────────────────────────────
+    p = trip.purpose
+    if p == "paid_work":
+        verdict = _escalate(verdict, "visa")
+        confidence = "high" if c["status"] != "check" else confidence
+        steps.append(Step("Purpose: paid work",
+                          "Paid work, including a paid internship or stipend, needs work authorisation (a work "
+                          "visa or permit) in every country, even where visits are visa-free.", "fail"))
+        actions.append("Ask your employer what work visa or permit they will sponsor — start 3 months ahead.")
+    elif p == "study":
+        if trip.days > 90:
+            verdict = _escalate(verdict, "visa")
+            steps.append(Step("Purpose: study over 90 days", "Courses over 90 days need a student visa.", "fail"))
+        else:
+            steps.append(Step("Purpose: short course",
+                              "Short courses of up to 90 days are often allowed as a visitor, but ask the "
+                              "institution to confirm in writing.", "warn"))
+    elif p == "volunteer":
+        steps.append(Step("Purpose: unpaid volunteering",
+                          "Usually allowed on a visit, but some countries treat structured volunteering (with "
+                          "free accommodation or expenses) as work. Get the unpaid status in writing.", "warn"))
+    elif p == "business":
+        steps.append(Step("Purpose: business visit",
+                          "Meetings and conferences are normally allowed on a visit. Doing paid work for a local "
+                          "client is not.", "pass" if verdict == "go" else "info"))
+    elif p == "transit":
+        if trip.destination in ("US", "CA"):
+            verdict = _escalate(verdict, "visa")
+            steps.append(Step("Transit", f"{c['name']} requires a visa even to change planes.", "fail"))
+        else:
+            steps.append(Step("Transit",
+                              "Airport transit rules depend on the airport and your document. Ask the airline "
+                              "before you book, as they can deny boarding.", "warn"))
+    elif p == "medical":
+        steps.append(Step("Purpose: medical treatment",
+                          "Carry the hospital's letter and proof you can pay. Longer treatment may need a "
+                          "medical visa.", "info"))
+    else:
+        steps.append(Step(f"Purpose: {purpose_label.lower()}", "A standard visit purpose.", "pass"))
+
+    # ── 4. Length of stay ────────────────────────────────────────────────
+    if trip.days > c["max_stay_days"] and p != "transit":
+        verdict = _escalate(verdict, "visa")
+        steps.append(Step("Length of stay",
+                          f"{trip.days} days is over the {c['max_stay_days']}-day short-stay limit, so you need a "
+                          "long-stay (national) visa or residence permit.", "fail"))
+    else:
+        steps.append(Step("Length of stay", f"{trip.days} days is within the short-stay limit.", "pass"))
+    if trip.days > 730:
+        steps.append(Step("Time outside the UK",
+                          "If you have indefinite leave to remain, it can lapse after more than 2 years outside "
+                          "the UK.", "warn"))
+
+    # ── 5. Document validity ─────────────────────────────────────────────
+    if trip.doc_expiry and trip.depart:
+        ret = trip.return_date
+        need = _add_months(ret, c["validity_months"])
+        if trip.doc_expiry <= ret:
+            verdict = "stop"
+            steps.append(Step("Document validity",
+                              f"Your document expires on {trip.doc_expiry:%d %b %Y}, before you return on "
+                              f"{ret:%d %b %Y}.", "fail"))
+            actions.insert(0, "Renew your travel document first — the Home Office can take several weeks.")
+        elif trip.doc_expiry < need:
+            hard = c["schengen"]
+            if hard:
+                verdict = "stop"
+            steps.append(Step("Document validity",
+                              f"{c['name']} expects about {c['validity_months']} months of validity after you "
+                              f"leave (until {need:%d %b %Y}). Yours expires {trip.doc_expiry:%d %b %Y}.",
+                              "fail" if hard else "warn"))
+            actions.insert(0, "Renew your travel document before you travel, or check with the airline.")
+        else:
+            steps.append(Step("Document validity",
+                              f"Valid until {trip.doc_expiry:%d %b %Y} — enough for this trip.", "pass"))
+    else:
+        steps.append(Step("Document validity",
+                          f"Add your expiry date to check it. {c['name']} expects about {c['validity_months']} "
+                          "months of validity after you leave.", "info"))
+
+    # ── 6. Timing ────────────────────────────────────────────────────────
+    apply_by = None
+    if trip.depart and verdict in LEAD_WEEKS:
+        weeks = 12 if trip.destination == "US" else LEAD_WEEKS[verdict]
+        apply_by = trip.depart - timedelta(weeks=weeks)
+        late = apply_by < today
+        steps.append(Step("Timing",
+                          (f"Apply by {apply_by:%d %b %Y} (about {weeks} weeks before departure)."
+                           + (" That date has passed — consider moving your travel date." if late else "")),
+                          "warn" if late else "info"))
+
+    # ── 7. Safety ────────────────────────────────────────────────────────
+    if c["fcdo_warning"]:
+        steps.append(Step("Travel safety",
+                          f"The UK Foreign Office advises against all or some travel to parts of {c['name']}. "
+                          "Check the latest advice, as your insurance may not cover you.", "warn",
+                          {"label": "FCDO travel advice", "url": "https://www.gov.uk/foreign-travel-advice"}))
+
+    # ── 8. Leaving and returning to the UK ───────────────────────────────
+    steps.append(Step("Your UK status",
+                      "Make sure your UKVI eVisa account shows this travel document. Airlines and UK Border "
+                      "Force check it when you come back.", "info"))
+
+    # ── Actions ──────────────────────────────────────────────────────────
+    if verdict == "go":
+        if confidence != "high":
+            actions.append(f"Email {embassy_of(c)} to confirm — use the letter template below.")
+        actions.append("Collect the documents in your checklist.")
+    elif verdict == "check":
+        actions.append(f"Ask {embassy_of(c)} in London, in writing, before booking anything.")
+    elif verdict == "evisa":
+        if c.get("evisa_url"):
+            actions.append(f"Check the official online system accepts a {doc['short'].split(' (')[0].lower()}: "
+                           f"{c['evisa_url']}")
+        actions.append("If it doesn't, apply through the embassy in London.")
+    elif verdict == "visa" and p != "paid_work":
+        actions.append(f"Book a visa appointment with {embassy_of(c)} or its visa centre.")
+    if verdict in ("check", "visa", "evisa"):
+        actions.append("Don't pay for non-refundable flights until your entry is confirmed.")
+
+    headline = HEADLINES[verdict]
+    if verdict == "stop" and any(s.title == "Document validity" and s.outcome == "fail" for s in steps):
+        headline = "Renew your travel document first"
+    if verdict == "go" and confidence == "high":
+        headline = "No visa needed for this trip"
+
+    summary = {
+        "go": f"Short {purpose_label.lower()} trips to {c['name']} are usually visa-free with your document.",
+        "check": f"We can't confirm {c['name']}'s current rule for your document. Get written confirmation first.",
+        "evisa": f"{c['name']} requires a visa. An online system exists, but check it accepts your document.",
+        "visa": f"Apply to {embassy_of(c)} before you travel.",
+        "stop": "There's a problem with this trip that needs fixing before you go.",
+    }[verdict]
+    if p == "paid_work" and verdict == "visa":
+        summary = f"Paid work in {c['name']} needs a work visa or permit, issued before you start."
+
+    return Assessment(verdict, headline, summary, confidence, c, trip, steps,
+                      [a for a in actions if a], apply_by)
 
 
-def get_document_checklist(destination: str, purpose: str, visa_required: bool):
-    """
-    Generate a personalised document checklist based on destination, purpose, and visa status.
-    """
-    base_checklist = DOCUMENT_CHECKLISTS.get(purpose, DOCUMENT_CHECKLISTS["Tourism / Holiday"])
-
-    always = list(base_checklist["always_required"])
-    sometimes = list(base_checklist.get("sometimes_required", []))
-    important_note = base_checklist.get("important_note", None)
-
-    # Add visa-specific docs if required
-    if visa_required:
-        if "Visa application form (if destination requires a visa)" in sometimes:
-            sometimes.remove("Visa application form (if destination requires a visa)")
-        always.append(f"Completed visa application form for {destination}")
-        always.append("Visa fee payment (check current fee on embassy website)")
-        always.append("Original CTD + 1 clear photocopy of the bio-data page")
-
-    # Country-specific additions
-    if destination in ["United States"]:
-        sometimes.append("DS-160 online visa application (complete before your embassy appointment)")
-        sometimes.append("Appointment confirmation letter from the US Embassy")
-
-    if destination in ["Canada"]:
-        sometimes.append("Biometrics appointment at a Visa Application Centre (VAC)")
-
-    if destination in ["Australia", "New Zealand"]:
-        sometimes.append("Health examination by a panel physician (required for stays over 3 months)")
-
-    return {
-        "always_required": always,
-        "sometimes_required": sometimes,
-        "important_note": important_note,
-    }
+# ── Checklist & journey ─────────────────────────────────────────────────────
+def checklist(a: Assessment) -> list[str]:
+    items = list(CHECKLIST_BASE) + CHECKLIST_PURPOSE.get(a.trip.purpose, [])
+    if a.verdict in ("visa", "evisa"):
+        items += CHECKLIST_VISA
+    if a.trip.destination == "US":
+        items += ["DS-160 online form and interview booking confirmation"]
+    if a.country["schengen"]:
+        items += ["Check whether you need ETIAS travel authorisation (EU scheme due to start in late 2026)"]
+    if a.trip.doc_type == "cot":
+        items += ["Written confirmation that the destination accepts a Certificate of Travel"]
+    # de-duplicate while keeping order
+    seen, out = set(), []
+    for i in items:
+        if i not in seen:
+            seen.add(i)
+            out.append(i)
+    return out
 
 
-def get_journey_steps(destination: str, purpose: str, visa_required: bool, evisa_required: bool):
-    """
-    Generate a step-by-step Walking Border journey plan.
-    """
-    steps = []
-
-    steps.append({
-        "step": 1,
-        "title": "Check Your Eligibility",
-        "status": "complete",
-        "detail": "You've completed this step by using Secure Path.",
-        "timeframe": "Now"
-    })
-
-    steps.append({
-        "step": 2,
-        "title": "Gather Your Documents",
-        "status": "action",
-        "detail": "Use the document checklist below. Start with your CTD validity — it must be valid for at least 6 months beyond your return date.",
-        "timeframe": "4-8 weeks before travel"
-    })
-
-    if visa_required:
-        evisa_text = (
-            "Apply online for your eVisa first, then book your embassy appointment if required."
-            if evisa_required else
-            "Book an appointment at the embassy or consulate. Do not travel before your visa is issued."
-        )
-        if purpose == "Paid Work / Internship":
-            evisa_text = (
-                "Apply for a work visa / work permit from the destination country's embassy. "
-                "Your employer may need to sponsor your application. Do not start work before the visa is issued."
-            )
-        steps.append({
-            "step": 3,
-            "title": "Apply for Your Visa",
-            "status": "action",
-            "detail": evisa_text,
-            "timeframe": "8-12 weeks before travel"
-        })
-
-    steps.append({
-        "step": len(steps) + 1,
-        "title": "Purchase Travel Insurance",
-        "status": "action",
-        "detail": "Ensure your policy covers medical, repatriation, and the specific purpose of your trip (e.g. work-related cover if doing paid or voluntary work). Keep a digital and printed copy.",
-        "timeframe": "Before booking flights"
-    })
-
-    steps.append({
-        "step": len(steps) + 1,
-        "title": "Prepare for Border Crossing",
-        "status": "info",
-        "detail": (
-            f"At the border, present your CTD and all supporting documents. "
-            f"If asked why you don't have a standard passport, calmly explain you hold a UK Convention Travel Document "
-            f"issued under the 1951 Refugee Convention. "
-            f"{'For eVisa countries, ensure your eVisa is on your phone AND printed — some border officers still ask for paper. ' if evisa_required else ''}"
-        ),
-        "timeframe": "Day of travel"
-    })
-
-    steps.append({
-        "step": len(steps) + 1,
-        "title": "Returning to the UK",
-        "status": "info",
-        "detail": "Your CTD guarantees your right of return to the UK. At UK Border Force, use the 'Other Documents' lane if eGates don't accept your CTD. The officer will verify your leave to remain status.",
-        "timeframe": "On return"
-    })
-
+def journey(a: Assessment) -> list[dict]:
+    d = a.trip.depart
+    fmt = lambda days: (d - timedelta(days=days)).strftime("%d %b %Y") if d else None  # noqa: E731
+    steps = [{"title": "Check entry rules", "when": "Done", "detail": "You've assessed this trip with Secure Path."}]
+    if a.verdict in ("check",) or a.confidence != "high":
+        steps.append({"title": "Confirm with the embassy", "when": fmt(70) or "~10 weeks before",
+                      "detail": "Send the enquiry letter and keep the reply. Bring it with you."})
+    if a.verdict in ("visa", "evisa"):
+        weeks = 12 if a.trip.destination == "US" else LEAD_WEEKS[a.verdict]
+        steps.append({"title": "Apply for your visa", "when": fmt(weeks * 7) or f"~{weeks} weeks before",
+                      "detail": "Apply online or book the embassy appointment. Track it weekly."})
+    steps += [
+        {"title": "Gather documents", "when": fmt(21) or "~3 weeks before",
+         "detail": "Work through your checklist. Keep paper copies and photos on your phone."},
+        {"title": "Book and insure", "when": fmt(14) or "Once entry is confirmed",
+         "detail": "Book flights once entry is confirmed, and get insurance that covers the trip purpose."},
+        {"title": "Update your UKVI account", "when": fmt(7) or "1 week before",
+         "detail": "Check your eVisa shows your current travel document."},
+        {"title": "At the border", "when": d.strftime("%d %b %Y") if d else "Travel day",
+         "detail": "Show your document, plus your visa or confirmation letter. Stay calm and answer clearly."},
+        {"title": "Return to the UK", "when": a.trip.return_date.strftime("%d %b %Y") if d else "Return day",
+         "detail": "Use the staffed desks if the eGates don't accept your document."},
+    ]
     return steps
+
+
+# ── Exports ─────────────────────────────────────────────────────────────────
+def trip_summary_md(a: Assessment) -> str:
+    t, c = a.trip, a.country
+    lines = [f"# Secure Path — trip assessment", "",
+             f"**Destination:** {c['name']}  ",
+             f"**Purpose:** {PURPOSES[t.purpose]}  ",
+             f"**Length:** {t.days} days" + (f" (from {t.depart:%d %b %Y})" if t.depart else "") + "  ",
+             f"**Document:** {DOC_TYPES[t.doc_type]['name']}", "",
+             f"## Result: {a.headline}", "", a.summary, "",
+             f"Confidence: {a.confidence} · Data reviewed {DATA_REVIEWED}", "", "## How this was decided", ""]
+    icon = {"pass": "✓", "warn": "!", "fail": "✕", "info": "·"}
+    for s in a.steps:
+        lines.append(f"- {icon[s.outcome]} **{s.title}** — {s.detail}")
+    lines += ["", "## What to do next", ""] + [f"{i}. {x}" for i, x in enumerate(a.actions, 1)]
+    lines += ["", "## Checklist", ""] + [f"- [ ] {x}" for x in checklist(a)]
+    lines += ["", "## Sources", ""] + [f"- {s['label']}: {s['url']}" for s in c["sources"]]
+    lines += ["", "_Guidance only — not legal advice. Always confirm with the embassy before travelling._"]
+    return "\n".join(lines)
+
+
+def embassy_letter(a: Assessment, name: str = "[Your name]") -> str:
+    t, c = a.trip, a.country
+    doc = DOC_TYPES[t.doc_type]
+    when = f"from {t.depart:%d %B %Y} for {t.days} days" if t.depart else f"for about {t.days} days"
+    schengen_line = (
+        "\nI understand that, under Article 6(2) of Regulation (EU) 2018/1806, Member States may exempt "
+        "refugees and stateless persons residing in the United Kingdom from the visa requirement, and I would "
+        "be grateful if you could confirm whether this exemption applies to me.\n"
+        if c["schengen"] and t.doc_type != "cot" else "")
+    return f"""Subject: Visa requirement enquiry — holder of a UK {doc['name']}
+
+Dear Consular Section, Embassy of {country_name(c)} in London,
+
+I hold a {doc['name']} issued by the UK Home Office ({doc['basis']}). I live in the United Kingdom and have valid permission to stay.
+
+I am planning to travel to {c['name']} {when}. The purpose of my trip is: {PURPOSES[t.purpose].lower()}.
+
+Could you please confirm in writing:
+1. Whether I need a visa for this trip, and if so which type;
+2. Whether your country accepts my travel document for entry;
+3. Any minimum validity your country requires for my document.
+{schengen_line}
+I would be grateful for a written reply that I can show to my airline and at the border.
+
+Kind regards,
+{name}
+"""
