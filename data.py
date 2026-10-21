@@ -4,34 +4,37 @@ Convention Travel Document (CTD) rules based on:
 - 1959 Strasbourg Agreement (ETS No. 31)
 - Individual country bilateral arrangements
 - UK Home Office guidance
+
+Legal intelligence layer for Agentic AI Adviser
 """
 
-# Countries that have ratified ETS No. 31 (Strasbourg Agreement)
-# These allow visa-free entry for CTD holders for short stays (typically up to 3 months)
+# Countries that have ratified ETS No. 31 (Strasbourg Agreement 1959)
+# CRITICAL: ETS No. 31 Article 1(2) — visa-free only applies to NON-GAINFUL purposes.
+# Paid work/internships = gainful employment = visa required even in ETS 31 countries.
 ETS_31_COUNTRIES = {
-    "Belgium": {"days": 90, "notes": "Ratified 1960. No visa required for stays up to 90 days."},
-    "Denmark": {"days": 90, "notes": "Ratified 1966. No visa required for stays up to 90 days."},
-    "France": {"days": 90, "notes": "Ratified 1954. No visa required for stays up to 90 days."},
-    "Germany": {"days": 90, "notes": "Ratified 1954. No visa required for stays up to 90 days."},
-    "Iceland": {"days": 90, "notes": "Ratified 1955. No visa required for stays up to 90 days."},
-    "Ireland": {"days": 90, "notes": "Ratified 1961. No visa required for stays up to 90 days."},
-    "Italy": {"days": 90, "notes": "Ratified 1954. No visa required for stays up to 90 days."},
-    "Luxembourg": {"days": 90, "notes": "Ratified 1960. No visa required for stays up to 90 days."},
-    "Netherlands": {"days": 90, "notes": "Ratified 1956. No visa required for stays up to 90 days."},
-    "Norway": {"days": 90, "notes": "Ratified 1955. No visa required for stays up to 90 days."},
-    "Portugal": {"days": 90, "notes": "Ratified 1976. No visa required for stays up to 90 days."},
-    "Romania": {"days": 90, "notes": "Ratified 1999. No visa required for stays up to 90 days. Note: embassies sometimes incorrectly advise otherwise — your rights are legally protected under ETS No. 31."},
-    "Spain": {"days": 90, "notes": "Ratified 1978. No visa required for stays up to 90 days."},
-    "Sweden": {"days": 90, "notes": "Ratified 1954. No visa required for stays up to 90 days."},
-    "Switzerland": {"days": 90, "notes": "Ratified 1954. No visa required for stays up to 90 days."},
+    "Belgium": {"days": 90, "notes": "Ratified 1960. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Denmark": {"days": 90, "notes": "Ratified 1966. No visa required for stays up to 90 days for non-gainful purposes."},
+    "France": {"days": 90, "notes": "Ratified 1954. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Germany": {"days": 90, "notes": "Ratified 1954. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Iceland": {"days": 90, "notes": "Ratified 1955. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Ireland": {"days": 90, "notes": "Ratified 1961. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Italy": {"days": 90, "notes": "Ratified 1954. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Luxembourg": {"days": 90, "notes": "Ratified 1960. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Netherlands": {"days": 90, "notes": "Ratified 1956. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Norway": {"days": 90, "notes": "Ratified 1955. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Portugal": {"days": 90, "notes": "Ratified 1976. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Romania": {"days": 90, "notes": "Ratified 1999. No visa required for stays up to 90 days for non-gainful purposes. Note: embassies sometimes incorrectly advise otherwise — your rights are legally protected under ETS No. 31."},
+    "Spain": {"days": 90, "notes": "Ratified 1978. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Sweden": {"days": 90, "notes": "Ratified 1954. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Switzerland": {"days": 90, "notes": "Ratified 1954. No visa required for stays up to 90 days for non-gainful purposes."},
     "United Kingdom": {"days": 90, "notes": "As issuing country — right of return guaranteed."},
-    "Austria": {"days": 90, "notes": "Ratified 1974. No visa required for stays up to 90 days."},
-    "Finland": {"days": 90, "notes": "Ratified 1990. No visa required for stays up to 90 days."},
-    "Greece": {"days": 90, "notes": "Ratified 1960. No visa required for stays up to 90 days."},
-    "Turkey": {"days": 90, "notes": "Ratified 1961. No visa required for stays up to 90 days."},
+    "Austria": {"days": 90, "notes": "Ratified 1974. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Finland": {"days": 90, "notes": "Ratified 1990. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Greece": {"days": 90, "notes": "Ratified 1960. No visa required for stays up to 90 days for non-gainful purposes."},
+    "Turkey": {"days": 90, "notes": "Ratified 1961. No visa required for stays up to 90 days for non-gainful purposes."},
 }
 
-# Countries that have separate bilateral agreements or arrangements
+# Countries with separate bilateral agreements or arrangements
 BILATERAL_COUNTRIES = {
     "Canada": {
         "visa_required": True,
@@ -138,6 +141,23 @@ DOCUMENT_CHECKLISTS = {
         ],
         "important_note": "Under Article 1(2) of ETS No. 31, unpaid voluntary work does NOT count as 'gainful employment'. Your visa-free rights are fully preserved. If an embassy questions this, reference ETS No. 31 Article 1(2) directly."
     },
+    "Paid Work / Internship": {
+        "always_required": [
+            "Valid UK Convention Travel Document",
+            "Employment contract or internship offer letter (confirming paid position, role, and duration)",
+            "Work visa / work permit for the destination country (required in ALL countries, including ETS No. 31 signatories)",
+            "Proof of accommodation during employment",
+            "Travel insurance including employer liability cover",
+            "Passport-size photographs (minimum 2)",
+        ],
+        "sometimes_required": [
+            "Employer sponsorship documents / Certificate of Sponsorship",
+            "Proof of professional qualifications or university enrolment",
+            "Health insurance documentation (required in many EU countries for work visas)",
+            "Bank statements showing financial stability",
+        ],
+        "important_note": "⚠️ CRITICAL: Paid work — including paid internships — is classified as 'gainful employment' under ETS No. 31 Article 1(2). This means the visa-free provisions of ETS No. 31 DO NOT APPLY. Even if your destination has ratified ETS No. 31 (e.g. Romania, France, Germany), you MUST obtain a work visa before starting a paid role. This is a common and costly mistake."
+    },
     "Study": {
         "always_required": [
             "Valid UK Convention Travel Document",
@@ -181,15 +201,94 @@ CTD_INFO = {
     "legal_basis": "1951 UN Refugee Convention, Article 28",
     "key_rights": [
         "Right of return to the UK at any time",
-        "Visa-free travel to ETS No. 31 signatory states",
+        "Visa-free travel to ETS No. 31 signatory states for non-gainful purposes (tourism, visiting family, voluntary work)",
         "Same travel rights as UK passport holders in many treaty countries",
     ],
     "key_limitations": [
         "Cannot be used to travel to your country of origin or the country you claimed asylum from",
+        "ETS No. 31 visa-free access does NOT apply to paid work/internships (gainful employment) — a work visa is always required",
         "Some countries do not recognise it as a travel document — always check before booking",
         "Does not confer UK citizenship or the right to a UK passport",
     ]
 }
+
+# ── AI Legal Context ─────────────────────────────────────────────────────────
+# This structured legal knowledge powers the Agentic AI Adviser.
+# The AI uses this as authoritative source material, not general knowledge.
+
+AI_LEGAL_CONTEXT = """
+=== SECURE PATH: AUTHORITATIVE LEGAL KNOWLEDGE BASE FOR CTD TRAVEL ===
+
+## 1. WHAT IS A CONVENTION TRAVEL DOCUMENT (CTD)?
+- Issued by the UK Home Office to refugees and stateless persons granted protection
+- Legal basis: 1951 UN Refugee Convention, Article 28
+- Also called: Refugee Travel Document, Blue Travel Document
+- Valid: 10 years (adults), 5 years (under 16)
+- DOES NOT allow travel to country of origin or country you fled from
+
+## 2. ETS NO. 31 — THE STRASBOURG AGREEMENT (1959)
+- Full name: Council of Europe Agreement on the Abolition of Visas for Refugees
+- Signatories (20 countries): Austria, Belgium, Denmark, Finland, France, Germany, Greece,
+  Iceland, Ireland, Italy, Luxembourg, Netherlands, Norway, Portugal, Romania, Spain, Sweden,
+  Switzerland, Turkey, United Kingdom
+- General rule: CTD holders can enter ETS 31 countries visa-free for up to 90 days
+
+## 3. CRITICAL EXCEPTION — ETS NO. 31 ARTICLE 1(2): GAINFUL EMPLOYMENT
+*** THIS IS THE MOST IMPORTANT NUANCE — DO NOT GET THIS WRONG ***
+Article 1(2) states the visa-free rights apply ONLY for "non-gainful purposes".
+- "Gainful employment" = any work for which you receive payment/salary/stipend
+- PAID INTERNSHIP = gainful employment → work visa REQUIRED, even in ETS 31 countries
+- UNPAID voluntary work = NOT gainful employment → visa-free rights preserved
+- The distinction: is money changing hands from employer to worker? If YES → visa needed
+
+REAL EXAMPLE: Going to Romania (ETS 31 signatory) for a PAID internship:
+- Romania IS an ETS 31 country → normally visa-free
+- BUT the internship is PAID → this is gainful employment under Article 1(2)
+- RESULT: Visa required. The CTD holder must apply for a Romanian work visa.
+- If they go without a visa, they are working illegally, regardless of ETS 31 membership.
+
+DURATION ALSO MATTERS:
+- Even for non-gainful purposes, stays OVER 90 days require a long-stay visa
+- e.g. a 120-day holiday in France would require a long-stay visa even though France is ETS 31
+
+## 4. COUNTRIES REQUIRING VISAS REGARDLESS OF PURPOSE
+- Canada: Temporary Resident Visa required (eVisa available)
+- United States: B1/B2 visitor visa required (ESTA does not apply to CTD holders)
+- Australia: Visitor Visa subclass 600 required (eVisitor/ETA not available)
+- New Zealand: Visitor Visa required
+- Japan: Visa required (in-person application at Japanese Embassy, London)
+- South Korea: Visa required
+- UAE: Visa required (cannot obtain on arrival; eVisa through icp.gov.ae)
+
+## 5. COUNTRIES WITH BILATERAL VISA-FREE ARRANGEMENTS (non-ETS 31)
+- Morocco: Visa-free up to 90 days under bilateral arrangement
+- Tunisia: Visa-free up to 3 months under bilateral arrangement
+
+## 6. KEY DOCUMENTS ALWAYS NEEDED
+- CTD must be valid for at least 6 months beyond return date
+- Proof of accommodation at destination
+- Proof of return/onward travel
+- Proof of sufficient funds
+- Travel insurance
+
+## 7. COMMON MISTAKES TO WARN USERS ABOUT
+1. Assuming ETS 31 = visa-free for paid work → WRONG (Article 1(2))
+2. Trying to use ESTA for US travel → CTD holders are NOT eligible for ESTA
+3. Forgetting CTD validity (needs 6+ months beyond return date)
+4. Not getting travel insurance that covers work-related activities
+5. Embassy misinformation: some embassies incorrectly require visas for ETS 31 travel
+   (for non-gainful purposes only) — users should cite ETS No. 31 Article directly
+6. Country of origin travel: CTD CANNOT be used to visit country of origin
+
+## 8. STUDY VISAS
+Even for ETS 31 countries, study usually requires a student visa regardless of duration,
+as formal educational enrollment is typically treated separately from tourist entry.
+
+## 9. HOW TO HANDLE EMBASSY MISINFORMATION (ETS 31 countries, non-gainful visits)
+Users should say: "I hold a UK Convention Travel Document under the 1951 Refugee Convention.
+Under ETS No. 31 (1959 Strasbourg Agreement), to which [COUNTRY] is a signatory, I am
+entitled to visa-free entry for non-gainful purposes up to 90 days. Please review this."
+"""
 
 ALL_COUNTRIES = sorted(list(ETS_31_COUNTRIES.keys()) + list(BILATERAL_COUNTRIES.keys()))
 PURPOSES = list(DOCUMENT_CHECKLISTS.keys())

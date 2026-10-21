@@ -1,6 +1,11 @@
 """
 Secure Path — Main Streamlit Application
 GovTech platform for Convention Travel Document holders.
+
+v2.0 — Agentic AI Travel Adviser
+Adds an AI-powered chat tab that reasons through nuanced CTD eligibility questions,
+including the critical ETS No. 31 Article 1(2) paid/unpaid work distinction.
+
 Research prototype — does not constitute legal advice.
 """
 
@@ -10,7 +15,7 @@ import os
 
 sys.path.insert(0, os.path.dirname(__file__))
 from engine import check_eligibility, get_document_checklist, get_journey_steps
-from data import ALL_COUNTRIES, PURPOSES, CTD_INFO
+from data import ALL_COUNTRIES, PURPOSES, CTD_INFO, AI_LEGAL_CONTEXT
 
 # ─── PAGE CONFIG ────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -78,7 +83,7 @@ st.markdown("""
   .verdict-required .verdict-title { color: #991B1B; }
   .verdict-check .verdict-title { color: #92400E; }
 
-  /* Warning box */
+  /* Warning / info boxes */
   .warning-box {
     background: #FFFBEB;
     border: 1px solid #FCD34D;
@@ -105,6 +110,15 @@ st.markdown("""
     margin: 0.5rem 0;
     font-size: 0.9rem;
     color: #4C1D95;
+  }
+  .critical-box {
+    background: #FEF2F2;
+    border: 2px solid #DC2626;
+    border-radius: 8px;
+    padding: 1rem 1.2rem;
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    color: #7F1D1D;
   }
 
   /* Checklist */
@@ -168,7 +182,7 @@ st.markdown("""
     margin-top: 1.5rem;
   }
 
-  /* CTD info box */
+  /* CTD info */
   .ctd-fact {
     background: white;
     border: 1px solid #E2E8F0;
@@ -179,6 +193,37 @@ st.markdown("""
     color: #334155;
   }
   .ctd-fact strong { color: #0A1628; }
+
+  /* AI chat panel */
+  .ai-intro {
+    background: linear-gradient(135deg, #0A1628 0%, #1E3A8A 100%);
+    border-radius: 12px;
+    padding: 1.5rem 2rem;
+    color: white;
+    margin-bottom: 1.5rem;
+  }
+  .ai-intro h3 { margin: 0 0 0.5rem 0; font-size: 1.2rem; }
+  .ai-intro p { margin: 0; font-size: 0.9rem; opacity: 0.85; }
+  .ai-example-chip {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.3);
+    color: white;
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    margin: 0.3rem 0.2rem 0 0;
+    cursor: pointer;
+  }
+  .demo-banner {
+    background: #FFFBEB;
+    border: 1px solid #FCD34D;
+    border-radius: 8px;
+    padding: 0.8rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.88rem;
+    color: #78350F;
+  }
 </style>
 """, unsafe_allow_html=True)
 
@@ -198,7 +243,12 @@ st.markdown("""
 
 
 # ─── MAIN TABS ───────────────────────────────────────────────────────────────
-tab1, tab2, tab3 = st.tabs(["🔍  Eligibility Checker", "📋  Document Checklist", "ℹ️  About My CTD"])
+tab1, tab2, tab3, tab4 = st.tabs([
+    "🔍  Eligibility Checker",
+    "📋  Document Checklist",
+    "ℹ️  About My CTD",
+    "🤖  AI Travel Adviser"
+])
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -253,6 +303,18 @@ with tab1:
         </div>
         """, unsafe_allow_html=True)
 
+        # ── Article 1(2) critical alert ──
+        if result.get("article_1_2_applies"):
+            st.markdown(f"""
+            <div class="critical-box">
+              📌 <strong>ETS No. 31 Article 1(2) — Critical Rule:</strong><br>
+              The 1959 Strasbourg Agreement grants visa-free travel for <em>non-gainful purposes only</em>.
+              A paid internship or employment is "gainful employment" under Article 1(2), which means the
+              visa-free exemption is <strong>not available</strong> — even in ETS No. 31 signatory countries.
+              This applies to <strong>{destination}</strong>.
+            </div>
+            """, unsafe_allow_html=True)
+
         # ── Legal basis ──
         if result["legal_basis"]:
             st.markdown(f'<div class="info-box">📜 <strong>Legal basis:</strong> {result["legal_basis"]}</div>', unsafe_allow_html=True)
@@ -286,6 +348,16 @@ with tab1:
             </div>
             """, unsafe_allow_html=True)
 
+        # ── Suggest AI adviser for complex cases ──
+        if result["article_1_2_applies"] or result["verdict"] == "check_required":
+            st.markdown("""
+            <div class="info-box" style="margin-top:1rem">
+              💬 <strong>Need more personalised advice?</strong>
+              Try the <strong>🤖 AI Travel Adviser</strong> tab — it can reason through complex situations,
+              ask you clarifying questions, and explain the law in plain language.
+            </div>
+            """, unsafe_allow_html=True)
+
     elif check_btn and destination == "Select a country…":
         st.warning("Please select a destination country first.")
 
@@ -308,7 +380,6 @@ with tab2:
     gen_btn = st.button("📋  Generate My Checklist", type="primary", use_container_width=True)
 
     if gen_btn and dest2 != "Select a country…":
-        # Auto-determine if not specified
         if visa_needed == "Not sure":
             quick_check = check_eligibility(dest2, purpose2, 14)
             visa_bool = quick_check["visa_required"] or False
@@ -320,7 +391,6 @@ with tab2:
         st.markdown("---")
         st.markdown(f"### Documents for: **{dest2}** · {purpose2}")
 
-        # Always required
         st.markdown('<div class="section-header">✅ Always Required</div>', unsafe_allow_html=True)
         for item in checklist["always_required"]:
             st.markdown(f"""
@@ -330,7 +400,6 @@ with tab2:
             </div>
             """, unsafe_allow_html=True)
 
-        # Sometimes required
         if checklist["sometimes_required"]:
             st.markdown('<div class="section-header">⚠️ May Also Be Required</div>', unsafe_allow_html=True)
             st.caption("Check with the embassy or consulate to confirm which of these apply to your specific situation.")
@@ -342,11 +411,9 @@ with tab2:
                 </div>
                 """, unsafe_allow_html=True)
 
-        # Important note
         if checklist["important_note"]:
             st.markdown(f'<div class="note-box" style="margin-top:1rem">📌 <strong>Important note for your trip type:</strong><br>{checklist["important_note"]}</div>', unsafe_allow_html=True)
 
-        # Download hint
         st.markdown("<br>", unsafe_allow_html=True)
         checklist_text = f"SECURE PATH — Document Checklist\n{'='*50}\nDestination: {dest2}\nPurpose: {purpose2}\n\nALWAYS REQUIRED:\n"
         for i, item in enumerate(checklist["always_required"], 1):
@@ -411,19 +478,20 @@ with tab3:
     st.markdown("""
     <div class="info-box">
       <strong>What it means for you:</strong> The Strasbourg Agreement is an international treaty that grants CTD holders the right to travel
-      visa-free to signatory countries for short stays (typically up to 90 days). Over 20 European countries have ratified it,
-      including France, Germany, Italy, Spain, Romania, and others.<br><br>
+      visa-free to signatory countries for short stays (typically up to 90 days) for <em>non-gainful purposes</em>.<br><br>
       <strong>The key problem:</strong> Many embassies and border officers are unaware of this treaty, and sometimes give incorrect advice —
-      telling CTD holders they need a visa when they legally do not. This is one of the core problems Secure Path is designed to solve.
+      telling CTD holders they need a visa when they legally do not. This is one of the core problems Secure Path is designed to solve.<br><br>
+      <strong>⚠️ Critical nuance — Article 1(2):</strong> The visa-free rights do NOT apply to gainful employment (paid work).
+      If you're doing a paid internship in an ETS No. 31 country, you still need a work visa.
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown("**What to say if an embassy gives you wrong information:**")
+    st.markdown("**What to say if an embassy gives you wrong information (for non-gainful visits):**")
     st.code(
         'I am a holder of a UK Convention Travel Document issued under the 1951 Refugee Convention. '
         'Under the 1959 Council of Europe Agreement on the Abolition of Visas for Refugees '
         '(ETS No. 31), to which [COUNTRY] is a signatory, I am entitled to visa-free entry '
-        'for stays of up to 90 days. I respectfully request that this be reviewed.',
+        'for stays of up to 90 days for non-gainful purposes. I respectfully request that this be reviewed.',
         language=None
     )
 
@@ -434,3 +502,376 @@ with tab3:
       This tool does not constitute legal advice. Always verify with official sources before travelling.
     </div>
     """, unsafe_allow_html=True)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TAB 4 — AI TRAVEL ADVISER (AGENTIC AI)
+# ══════════════════════════════════════════════════════════════════════════════
+with tab4:
+    # ── AI intro panel ──────────────────────────────────────────────────────
+    st.markdown("""
+    <div class="ai-intro">
+      <h3>🤖 AI Travel Adviser — Powered by Agentic AI</h3>
+      <p>
+        Unlike a simple lookup, this AI adviser reasons through your <em>specific situation</em>.
+        Tell it your destination, purpose, and duration — and it will ask clarifying questions,
+        apply the relevant law (including ETS No. 31 Article 1(2) on paid vs unpaid work),
+        and give you a personalised answer with legal citations.
+      </p>
+      <br>
+      <p style="font-size:0.8rem; opacity:0.7">Try asking about:</p>
+      <span class="ai-example-chip">Paid internship in Romania</span>
+      <span class="ai-example-chip">Volunteering in France for 3 months</span>
+      <span class="ai-example-chip">Holiday to Turkey for 2 weeks</span>
+      <span class="ai-example-chip">Study in Germany for 1 year</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── OpenAI API key setup ──────────────────────────────────────────────────
+    # Check for API key in environment or session state
+    api_key = os.environ.get("OPENAI_API_KEY", "")
+
+    if not api_key:
+        with st.expander("🔑 Connect OpenAI API (optional — demo mode works without this)", expanded=False):
+            st.markdown("""
+            To use the live AI adviser, enter your OpenAI API key below.
+            Your key is never stored — it only lives in this session.
+
+            Don't have one? The **demo mode** below shows exactly how the AI reasons
+            through your situation using the same logic.
+            """)
+            entered_key = st.text_input("OpenAI API Key", type="password", placeholder="sk-...")
+            if entered_key:
+                st.session_state["openai_key"] = entered_key
+                api_key = entered_key
+                st.success("✅ API key set for this session.")
+
+    # Use session state key if available
+    if "openai_key" in st.session_state:
+        api_key = st.session_state["openai_key"]
+
+    use_live_ai = bool(api_key)
+
+    if not use_live_ai:
+        st.markdown("""
+        <div class="demo-banner">
+          🎓 <strong>Demo Mode</strong> — Running without an OpenAI API key.
+          The AI adviser below uses rule-based agentic reasoning to demonstrate how personalised
+          guidance works. This shows the exact logic that would power the live AI.
+          To enable the full conversational AI, add your OpenAI API key above.
+        </div>
+        """, unsafe_allow_html=True)
+
+    # ── Chat history ────────────────────────────────────────────────────────
+    if "ai_messages" not in st.session_state:
+        st.session_state["ai_messages"] = [
+            {
+                "role": "assistant",
+                "content": (
+                    "Hello! I'm your Secure Path AI Travel Adviser. I specialise in travel guidance "
+                    "for UK Convention Travel Document (CTD) holders.\n\n"
+                    "I can help you understand:\n"
+                    "- Whether you need a visa for your destination\n"
+                    "- The impact of your trip **purpose** (paid work, voluntary, tourism, study)\n"
+                    "- The critical difference between paid and unpaid work under ETS No. 31\n"
+                    "- What documents you'll need and how to handle embassy misinformation\n\n"
+                    "Tell me about your travel plans — where are you going, what for, and how long?"
+                )
+            }
+        ]
+
+    # ── Display chat history ────────────────────────────────────────────────
+    for msg in st.session_state["ai_messages"]:
+        with st.chat_message(msg["role"], avatar="🤖" if msg["role"] == "assistant" else "👤"):
+            st.markdown(msg["content"])
+
+    # ── Chat input ──────────────────────────────────────────────────────────
+    user_input = st.chat_input("Ask me about your travel situation…")
+
+    if user_input:
+        # Add user message to history
+        st.session_state["ai_messages"].append({"role": "user", "content": user_input})
+        with st.chat_message("user", avatar="👤"):
+            st.markdown(user_input)
+
+        # ── Generate AI response ──────────────────────────────────────────
+        with st.chat_message("assistant", avatar="🤖"):
+            with st.spinner("Thinking through your situation…"):
+
+                if use_live_ai:
+                    # ── LIVE AI (OpenAI) ──────────────────────────────────
+                    try:
+                        from openai import OpenAI
+                        client = OpenAI(api_key=api_key)
+
+                        system_prompt = f"""You are the Secure Path AI Travel Adviser — a specialised AI assistant for UK Convention Travel Document (CTD) holders.
+
+Your purpose is to give personalised, legally accurate travel guidance based on the user's specific situation. You reason through their situation step by step, asking clarifying questions when needed.
+
+AUTHORITATIVE LEGAL KNOWLEDGE BASE:
+{AI_LEGAL_CONTEXT}
+
+BEHAVIOUR GUIDELINES:
+1. Always ask about the PURPOSE of travel (paid/unpaid, tourism, study) and DURATION before giving a verdict — these are critical to the answer.
+2. For ETS No. 31 countries: the visa-free entitlement ONLY applies to non-gainful purposes. ALWAYS check if the purpose involves payment.
+3. The Romania paid internship example is the classic case: Romania IS an ETS 31 country, but a PAID internship = gainful employment = work visa required under Article 1(2). Many people get this wrong.
+4. Be conversational but precise. Use plain English and explain the law clearly.
+5. Always cite the specific legal basis (e.g. "ETS No. 31 Article 1(2)").
+6. Flag common mistakes proactively (ESTA doesn't apply, CTD needs 6+ months validity, etc).
+7. End serious visa-required answers with: "⚠️ This is guidance only. Please verify with the relevant embassy before booking."
+8. Never make up countries or rules not in your knowledge base — say "I'd need to check that" if unsure.
+9. Be empathetic — CTD holders often face frustrating bureaucracy and embassy misinformation. Acknowledge this.
+
+FORMAT: Use clear markdown. Short paragraphs. Bold key conclusions. Use ✅ for safe / 🔴 for visa required / ⚠️ for warnings."""
+
+                        messages_for_api = [{"role": "system", "content": system_prompt}]
+                        for msg in st.session_state["ai_messages"]:
+                            messages_for_api.append({"role": msg["role"], "content": msg["content"]})
+
+                        response = client.chat.completions.create(
+                            model="gpt-4o-mini",
+                            messages=messages_for_api,
+                            max_tokens=800,
+                            temperature=0.3,  # Low temp for factual accuracy
+                        )
+                        ai_response = response.choices[0].message.content
+
+                    except ImportError:
+                        ai_response = "⚠️ OpenAI library not installed. Run `pip install openai` and restart the app."
+                    except Exception as e:
+                        ai_response = f"⚠️ AI error: {str(e)}\n\nFalling back to rule-based reasoning — please try the Eligibility Checker tab."
+
+                else:
+                    # ── DEMO MODE — Rule-based agentic reasoning ──────────
+                    ai_response = _demo_ai_response(user_input, st.session_state["ai_messages"])
+
+                st.markdown(ai_response)
+
+        st.session_state["ai_messages"].append({"role": "assistant", "content": ai_response})
+
+    # ── Clear chat button ──────────────────────────────────────────────────
+    col_clear, col_spacer = st.columns([1, 4])
+    with col_clear:
+        if st.button("🗑️ Clear Chat", use_container_width=True):
+            st.session_state["ai_messages"] = [
+                {
+                    "role": "assistant",
+                    "content": (
+                        "Chat cleared. I'm ready to help with your travel questions. "
+                        "Tell me about your destination, purpose, and how long you're planning to stay."
+                    )
+                }
+            ]
+            st.rerun()
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# DEMO AI — Agentic rule-based reasoning (no API key needed)
+# Demonstrates multi-step reasoning through CTD travel law.
+# ══════════════════════════════════════════════════════════════════════════════
+def _demo_ai_response(user_input: str, history: list) -> str:
+    """
+    Rule-based agentic reasoning engine for demo mode.
+    Parses user intent and applies CTD legal rules step by step.
+    Demonstrates the same logic the live AI would use.
+    """
+    from data import ETS_31_COUNTRIES, BILATERAL_COUNTRIES
+    import re
+
+    text = user_input.lower()
+    all_history = " ".join([m["content"].lower() for m in history])
+
+    # ── Detect country ────────────────────────────────────────────────────
+    detected_country = None
+    for country in list(ETS_31_COUNTRIES.keys()) + list(BILATERAL_COUNTRIES.keys()):
+        if country.lower() in text or country.lower() in all_history:
+            detected_country = country
+            break
+
+    # ── Detect purpose signals ───────────────────────────────────────────
+    is_paid_work = any(kw in text for kw in [
+        "paid internship", "paid work", "job", "salary", "employment", "work permit",
+        "internship", "working", "earning", "stipend", "remuneration"
+    ])
+    is_unpaid = any(kw in text for kw in [
+        "volunteer", "voluntary", "unpaid", "charity", "ngo", "placement"
+    ])
+    is_study = any(kw in text for kw in ["study", "university", "masters", "phd", "degree", "student"])
+    is_holiday = any(kw in text for kw in ["holiday", "tourism", "tourist", "visit", "vacation"])
+
+    # ── Detect duration ──────────────────────────────────────────────────
+    duration_match = re.search(r'(\d+)\s*(day|week|month)', text)
+    duration_days = None
+    if duration_match:
+        num = int(duration_match.group(1))
+        unit = duration_match.group(2)
+        if unit == "week":
+            duration_days = num * 7
+        elif unit == "month":
+            duration_days = num * 30
+        else:
+            duration_days = num
+
+    # ── Greetings / small talk ───────────────────────────────────────────
+    if any(kw in text for kw in ["hello", "hi", "hey", "help", "what can you"]):
+        return (
+            "Hello! I'm here to help you navigate travel with your UK Convention Travel Document (CTD).\n\n"
+            "The most important thing I do differently from a simple lookup is reason through the **specific details** of your trip — "
+            "especially the **purpose** of your travel, which dramatically changes what visa rules apply.\n\n"
+            "For example, did you know that going to Romania for a **paid internship** requires a work visa, "
+            "even though Romania is an ETS No. 31 signatory country? A standard lookup would tell you 'no visa needed' — "
+            "which would be dangerously wrong.\n\n"
+            "Tell me: where are you travelling, what for, and how long are you planning to stay?"
+        )
+
+    # ── The key scenario: paid internship in ETS 31 country ─────────────
+    if detected_country and detected_country in ETS_31_COUNTRIES and is_paid_work:
+        response = f"""**🔍 Analysing your situation step by step...**
+
+**Your trip:** Paid work/internship → **{detected_country}** ({f'{duration_days} days' if duration_days else 'duration TBC'})
+
+---
+
+**Step 1: Is {detected_country} an ETS No. 31 country?**
+✅ Yes — {detected_country} ratified the 1959 Strasbourg Agreement.
+
+**Step 2: Does ETS No. 31 cover paid work?**
+🔴 **No. This is the critical rule.**
+
+Under **ETS No. 31 Article 1(2)**, the visa-free entitlement applies only to **non-gainful purposes** — tourism, visiting family, unpaid voluntary work, and similar activities.
+
+A **paid internship** is classified as **gainful employment** because you are receiving money for your work. This means the visa-free exemption **does not apply**, regardless of {detected_country}'s ETS No. 31 membership.
+
+**Step 3: What do you actually need?**
+🔴 **You need a work visa / work permit** issued by {detected_country}.
+
+Your employer or placement provider will likely need to sponsor your visa application. You cannot legally start work without it.
+
+---
+
+**⚠️ Why this matters:**
+Many CTD holders — and even some embassy staff — incorrectly assume ETS No. 31 = visa-free for all purposes. Travelling to {detected_country} for paid work without a visa means you are working without authorisation, which could result in refusal of entry, deportation, or legal consequences.
+
+**What to do next:**
+1. Contact the {detected_country} embassy in London for work visa requirements
+2. Ask your employer to begin the sponsorship/work permit process early (allow 8–12 weeks)
+3. Do not book flights until the work visa is confirmed
+
+⚠️ *This is guidance based on ETS No. 31 Article 1(2). Please verify with the {detected_country} embassy before making travel arrangements.*"""
+        return response
+
+    # ── Unpaid voluntary work in ETS 31 country ─────────────────────────
+    if detected_country and detected_country in ETS_31_COUNTRIES and is_unpaid:
+        return f"""**🔍 Analysing your situation...**
+
+**Your trip:** Unpaid voluntary work → **{detected_country}** ({f'{duration_days} days' if duration_days else 'duration TBC'})
+
+---
+
+✅ **Good news — your visa-free rights are preserved.**
+
+Under **ETS No. 31 Article 1(2)**, unpaid voluntary work is **NOT classified as gainful employment**. This means your Convention Travel Document entitles you to visa-free entry to {detected_country} for up to 90 days.
+
+{f"✅ Your stay of {duration_days} days is within the 90-day visa-free limit." if duration_days and duration_days <= 90 else f"⚠️ Your planned stay of {duration_days} days exceeds the 90-day visa-free limit. You would need a long-stay visa." if duration_days else ""}
+
+**What you should carry:**
+- Your valid CTD (must be valid 6+ months beyond return date)
+- A letter from the organisation confirming the placement is **unpaid** and stating the role and duration
+- Proof of sufficient funds and accommodation
+- Travel insurance
+
+**If an embassy questions this:**
+You can say: *"Under ETS No. 31 Article 1(2), unpaid voluntary work does not constitute gainful employment. My visa-free rights are preserved under this treaty, to which {detected_country} is a signatory."*
+
+⚠️ *Guidance only. Verify with the {detected_country} embassy before travelling.*"""
+
+    # ── General ETS 31 holiday ────────────────────────────────────────────
+    if detected_country and detected_country in ETS_31_COUNTRIES and (is_holiday or not (is_paid_work or is_unpaid or is_study)):
+        days_text = f" for {duration_days} days" if duration_days else ""
+        over_limit = duration_days and duration_days > 90
+        return f"""**🔍 Analysing your trip to {detected_country}{days_text}...**
+
+{"⚠️ **Duration Alert:** Your planned stay exceeds the 90-day visa-free limit. You would need a long-stay visa even though " + detected_country + " is an ETS No. 31 signatory." if over_limit else f"✅ **No visa required** for this trip under normal circumstances."}
+
+**Why:** {detected_country} has ratified the **1959 Strasbourg Agreement (ETS No. 31)**, which grants CTD holders visa-free entry for non-gainful purposes for up to 90 days.
+
+{"✅ Your stay of " + str(duration_days) + " days is within the limit." if duration_days and duration_days <= 90 else ""}
+
+**One important question:** Is this trip purely for {"tourism/visiting" if is_holiday else "non-work purposes"}? If any part of the trip involves **paid work or a paid internship**, the answer changes completely — paid work requires a work visa even in ETS No. 31 countries under Article 1(2).
+
+⚠️ *Note: Some embassies incorrectly advise CTD holders to get a visa for non-gainful travel to ETS 31 countries. If this happens, you can cite ETS No. 31 directly and request a review.*"""
+
+    # ── Bilateral countries ───────────────────────────────────────────────
+    if detected_country and detected_country in BILATERAL_COUNTRIES:
+        info = BILATERAL_COUNTRIES[detected_country]
+        if info["visa_required"]:
+            evisa_note = f"\n\n🌐 **eVisa available:** {info['evisa_info']}" if info.get("evisa") else ""
+            return f"""**🔍 Analysing your trip to {detected_country}...**
+
+🔴 **Visa required** — {detected_country} is not an ETS No. 31 signatory and requires a visa from CTD holders.
+
+**Legal note:** {info['notes']}{evisa_note}
+
+**What to do:**
+1. Apply for the relevant visa well in advance (at least 8 weeks before travel)
+2. Ensure your CTD is valid for at least 6 months beyond your return date
+3. Gather supporting documents: accommodation, return travel, funds, travel insurance
+
+⚠️ *Guidance only. Verify current requirements with the {detected_country} embassy before booking.*"""
+        else:
+            return f"""**🔍 Analysing your trip to {detected_country}...**
+
+✅ **No visa required** under a bilateral arrangement between the UK and {detected_country}.
+
+**Note:** {info['notes']}
+
+{"⚠️ If you're planning to **work** there, even in a visa-free country, you'll need to check work permit requirements separately." if is_paid_work else ""}
+
+⚠️ *Guidance only. Always confirm requirements with official sources before travelling.*"""
+
+    # ── Study ─────────────────────────────────────────────────────────────
+    if is_study and detected_country:
+        return f"""**🔍 Analysing your study trip to {detected_country}...**
+
+📚 **Study typically requires a student visa**, even in ETS No. 31 countries.
+
+While ETS No. 31 covers short-term non-gainful travel, formal study (university enrollment, degree courses) is generally treated as a separate category by most countries and requires a specific student visa or residence permit.
+
+**What you'll typically need:**
+- Student visa or study permit for {detected_country}
+- Official enrolment/acceptance letter from the institution
+- Proof of tuition payment or scholarship
+- Proof of accommodation and sufficient funds
+- Health/travel insurance for the full duration
+- CTD valid 6+ months beyond your return date
+
+**My recommendation:** Contact {detected_country}'s embassy in London or the international student office at your institution for the exact requirements.
+
+⚠️ *This is general guidance. Student visa rules vary significantly by country and course type.*"""
+
+    # ── Need more info ────────────────────────────────────────────────────
+    missing = []
+    if not detected_country:
+        missing.append("**destination country**")
+    if not (is_paid_work or is_unpaid or is_study or is_holiday):
+        missing.append("**purpose of your trip** (paid work, volunteer, tourism, study?)")
+    if not duration_days:
+        missing.append("**how long** you plan to stay")
+
+    if missing:
+        return (
+            f"To give you accurate guidance, I need a couple more details:\n\n"
+            + "\n".join(f"- {m}" for m in missing)
+            + "\n\nFor example: *'I'm going to Romania for a paid 3-month internship'* or "
+            "*'I want to visit France for 2 weeks as a tourist'*.\n\n"
+            "The **purpose** of your trip is especially important — whether something is paid or unpaid "
+            "can completely change the visa requirements under ETS No. 31 Article 1(2)."
+        )
+
+    return (
+        "I've noted your situation. Could you clarify a few things to make sure I give you the right answer?\n\n"
+        "- Is this trip for **paid work** (salary/stipend), **unpaid volunteering**, **tourism**, or **study**?\n"
+        "- Which **country** are you travelling to?\n"
+        "- How long is the planned stay?\n\n"
+        "These details are crucial — especially whether any work is paid, as this affects your rights under ETS No. 31."
+    )
