@@ -155,3 +155,13 @@ def best_visa_contact(iso: str) -> dict | None:
         best = {**best, "address": best.get("address") or d["embassy"].get("address"),
                 "name": f"{d['embassy']['name']} — {best['name']}"}
     return {**best, "non_resident_in": d["non_resident_in"]}
+
+
+def lists_age_days(today=None) -> int | None:
+    """How old the FCDO lists are, from their 'Revised <Month Year>' heading."""
+    from datetime import date, datetime
+    try:
+        revised = datetime.strptime(META["revised"], "%B %Y").date()
+    except (ValueError, KeyError):
+        return None
+    return ((today or date.today()) - revised).days

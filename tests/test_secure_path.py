@@ -245,3 +245,25 @@ def test_trip_actions_name_the_real_consulate():
     assert "consulate in Manchester" in a.actions[0]
     a = assess(Trip(destination="EG", purpose="tourism", days=10), today=TODAY)
     assert all("consulates" not in x for x in a.actions)   # Egypt has none outside London
+
+
+def test_docx_and_odt_parsers_agree_on_structure():
+    from pathlib import Path
+    import sys as _s
+    _s.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
+    from build_missions import read_lines, LISTS
+    f = next(p for p in LISTS.iterdir() if "HONORARY" in p.name.upper())
+    assert len(read_lines(f)) > 1000
+
+
+def test_checker_matches_govuk_attachment_titles():
+    import sys as _s
+    from pathlib import Path
+    _s.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
+    from check_fcdo_updates import latest_attachments
+    content = {"details": {"attachments": [
+        {"title": "London diplomatic list and other representative offices", "url": "u1"},
+        {"title": "Consular offices outside London", "url": "u2"},
+        {"title": "Honorary Consulates in the UK, British Overseas Territories, and Crown Dependencies", "url": "u3"},
+        {"title": "Heads of mission in order of precedence and their spouses (July 2026)", "url": "u4"}]}}
+    assert set(latest_attachments(content)) == {"london", "consulates", "honorary", "heads"}

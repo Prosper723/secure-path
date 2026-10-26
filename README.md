@@ -59,6 +59,25 @@ Guidance only — not legal advice.
 
 ## Updating embassy contacts
 
-GOV.UK republishes the London Diplomatic List, Consulates outside London and Honorary Consuls list
-regularly. Download the new `.odt` / `.ods` files into `tools/fcdo_lists/` and run
-`python tools/build_missions.py`. Only public office details are kept — diplomats' names are dropped.
+The FCDO republishes these lists roughly every one to two months. To find out:
+
+1. **Get an email** — on the GOV.UK page (https://www.gov.uk/government/publications/foreign-embassies-in-the-uk)
+   click **"Get emails about this page"**. GOV.UK emails you whenever the lists change.
+2. **Or check with one command** — `python tools/check_fcdo_updates.py`. It asks GOV.UK's public API what's new,
+   shows the change notes, downloads the new files into `tools/fcdo_lists/` (older versions move to `archive/`),
+   rebuilds `missions.json` and lists which countries' details changed. Add `--yes` to skip the question, or
+   `--check` to only report.
+3. **The app warns you** — if the lists are more than 3 months old, the "Where to apply" tab says so.
+
+After updating, run `python -m pytest -q` and spot-check a few countries. GOV.UK sometimes publishes a list
+as Word (.docx) instead of .odt; both are supported. Only public office details are kept — diplomats' names are
+dropped.
+
+## Going public (GitHub or a hosted demo)
+
+- **No API key is stored in the code.** Without a key the adviser runs in rules-engine mode, which is free and
+  needs nothing. A key is only used if you paste one into *AI settings*, set an `ANTHROPIC_API_KEY` /
+  `OPENAI_API_KEY` environment variable, or add it to `.streamlit/secrets.toml`.
+- `.gitignore` keeps `secrets.toml`, `.env` files and the raw FCDO lists (which name diplomats) out of the repo.
+- On a public hosted demo, **don't put your own key in the host's secrets**: every visitor would spend your credit.
+  Leave it in rules-engine mode; visitors who want live AI can paste their own key, which lasts only for their session.

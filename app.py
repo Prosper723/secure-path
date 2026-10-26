@@ -14,7 +14,7 @@ import streamlit as st
 from data import (COUNTRIES, DESTINATIONS, PURPOSES, DOC_TYPES, STATUS, CONFIDENCE, SOURCES, FAQ,
                   DATA_REVIEWED)
 from engine import Trip, assess, checklist, journey, trip_summary_md, embassy_letter, country_name
-from contacts import directory, nearest_office, UK_CITIES, META as CONTACTS_META
+from contacts import directory, nearest_office, UK_CITIES, META as CONTACTS_META, lists_age_days
 from adviser import TripState, respond
 import ui
 
@@ -79,6 +79,11 @@ def render_directory(iso: str, home: str | None):
                                     distance=f"{o['km']} km away" if home and o["km"] else None)
         st.caption("Honorary consuls are volunteers who represent a country locally. Most can't issue visas, but "
                    "they can often answer questions — phone before you visit.")
+    age = lists_age_days()
+    if age is not None and age > 92:
+        ui.callout("These contact details may be out of date",
+                   f"They come from the FCDO lists revised {CONTACTS_META['revised']}. Check the embassy's own website "
+                   "before you visit or post documents.", "amber")
     st.markdown(f'<p class="fine">Source: {CONTACTS_META["source"]} (FCDO, revised {CONTACTS_META["revised"]}). '
                 'Only public office details are shown.</p>', unsafe_allow_html=True)
 

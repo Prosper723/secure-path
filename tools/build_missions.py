@@ -73,6 +73,33 @@ def odt_lines(path: Path) -> list[str]:
     return lines
 
 
+def docx_lines(path: Path) -> list[str]:
+    """GOV.UK sometimes publishes these lists as Word files instead of OpenDocument."""
+    W = "http://schemas.openxmlformats.org/wordprocessingml/2006/main"
+    with zipfile.ZipFile(path) as z:
+        root = ET.fromstring(z.read("word/document.xml"))
+    lines = []
+    for para in root.iter(f"{{{W}}}p"):
+        parts = []
+        for node in para.iter():
+            tag = node.tag.split("}")[-1]
+            if tag == "t" and node.text:
+                parts.append(node.text)
+            elif tag == "tab":
+                parts.append(" ")
+            elif tag in ("br", "cr"):
+                parts.append("\n")
+        for ln in "".join(parts).split("\n"):
+            ln = re.sub(r"\s+", " ", ln.replace("\xa0", " ")).strip()
+            if ln:
+                lines.append(ln)
+    return lines
+
+
+def read_lines(path: Path) -> list[str]:
+    return docx_lines(path) if path.suffix.lower() == ".docx" else odt_lines(path)
+
+
 def ods_rows(path: Path, sheet: str) -> list[list[str]]:
     with zipfile.ZipFile(path) as z:
         root = ET.fromstring(z.read("content.xml"))
@@ -424,18 +451,20 @@ def parse_hom(path):
 
 
 def main():
-    def find(pattern):
-        hits = sorted(LISTS.glob(pattern))
+    def find(stem, exts=(".odt", ".docx")):
+        """Newest file (by modification time) whose name contains `stem`, in any supported format."""
+        hits = [p for p in LISTS.iterdir() if stem.lower() in p.name.lower() and p.suffix.lower() in exts]
         if not hits:
-            sys.exit(f"Missing {pattern} in {LISTS}")
-        return hits[-1]
+            sys.exit(f"Missing a '{stem}' file ({'/'.join(exts)}) in {LISTS}")
+        return max(hits, key=lambda p: p.stat().st_mtime)
 
-    all_london = odt_lines(find("*LONDON_DIPLOMATIC_LIST*.odt"))
+    london_file = find("LONDON_DIPLOMATIC_LIST")
+    all_london = read_lines(london_file)
     london_main, london_honorary = split_london(all_london)
     london = parse_london(london_main)
-    consulates = parse_offices(odt_lines(find("*CONSULATES_OUTSIDE_LONDON*.odt")), "consulate")
-    honorary = parse_offices(odt_lines(find("*HONORARY_CONSULS*.odt")), "honorary")
-    hom = parse_hom(find("*Heads_of_Mission*.ods"))
+    consulates = parse_offices(read_lines(find("CONSULATES_OUTSIDE_LONDON")), "consulate")
+    honorary = parse_offices(read_lines(find("HONORARY_CONSUL")), "honorary")
+    hom = parse_hom(find("Heads_of_Mission", (".ods",)))
 
     missions = {}
     for iso in COUNTRIES:
@@ -449,7 +478,8 @@ def main():
             missions[iso] = rec
 
     meta = {"source": "FCDO London Diplomatic List, Consulates outside London and Honorary Consuls list",
-            "revised": "October 2026",
+            "revised": next((re.sub(r"(?i)^revised\s+", "", l).title() for l in all_london[:5]
+                             if l.upper().startswith("REVISED")), "unknown"),
             "url": "https://www.gov.uk/government/publications/foreign-embassies-in-the-uk"}
     OUT.write_text(json.dumps({"meta": meta, "missions": missions}, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"Wrote {OUT.name}: {len(missions)} countries · "
