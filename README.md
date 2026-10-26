@@ -1,8 +1,41 @@
 # Secure Path
 
-Clear visa answers for people travelling on UK Home Office travel documents (refugee Convention Travel
-Document, Stateless Person's Travel Document, Certificate of Travel). Final-year GovTech prototype,
-Manchester Metropolitan University (5Z6Z1002).
+**Clear visa answers for people travelling on UK Home Office travel documents.**
+
+Refugees and stateless people in the UK can't travel on a national passport. They travel on a Convention
+Travel Document, a Stateless Person's Travel Document or a Certificate of Travel. Visa rules for these
+documents are scattered across embassy websites, EU regulations and international treaties, and they often
+contradict each other. Secure Path brings them together in one app: enter a trip and get a clear verdict,
+the reasoning behind it, and exactly what to do next.
+
+Final-year GovTech prototype, BSc (Hons) Business Technology, Manchester Metropolitan University (5Z6Z1002).
+
+<!-- Add a screenshot of the "Check a trip" verdict screen here:
+![Secure Path – trip check](docs/screenshot-check.png)
+-->
+
+## What it does
+
+- **Check a trip:** a rules engine gives a verdict (visa-free, visa required, or confirm before booking) with
+  step-by-step reasoning, a document checklist, a trip plan and a ready-to-send letter.
+- **Where to apply:** finds the right embassy or consulate for 191 countries, sorted by distance from where
+  the user lives.
+- **World map:** an interactive view of all 197 countries, coloured by status and confidence level.
+- **AI adviser:** answers follow-up questions in plain English. The AI explains the rules engine's verdict but
+  can never change it, so answers stay grounded in sourced evidence.
+- **Your rights and Data & sources:** every answer links back to its official source, with a confidence level
+  and the date it was checked.
+
+## Built with
+
+Python · Streamlit · pandas · Plotly · pytest · Anthropic / OpenAI APIs (optional)
+
+**Highlights**
+- Rules engine separated from the AI layer, so the AI can explain answers but cannot invent them
+- Data pipeline that builds country and embassy datasets from official FCDO lists and embassy evidence
+- Source monitoring that flags official pages for human review when they change
+- 35 automated tests covering data integrity, the engine and the adviser
+- Privacy by design: diplomats' names are dropped and no API key is stored in the code
 
 ## Run it
 
@@ -39,7 +72,7 @@ The AI explains the rules engine's verdict but can never change it.
 | `adviser.py` | Language understanding, conversation memory, demo/live AI replies |
 | `ui.py` | Design system (verdict card, step list, timeline, chips) |
 | `app.py` | Streamlit app: Check a trip · World map · Adviser · Your rights · Data & sources |
-| `tests/` | 33 tests covering data integrity, the engine and the adviser |
+| `tests/` | 35 tests covering data integrity, the engine and the adviser |
 
 ## Data and confidence
 
@@ -81,3 +114,8 @@ dropped.
 - `.gitignore` keeps `secrets.toml`, `.env` files and the raw FCDO lists (which name diplomats) out of the repo.
 - On a public hosted demo, **don't put your own key in the host's secrets**: every visitor would spend your credit.
   Leave it in rules-engine mode; visitors who want live AI can paste their own key, which lasts only for their session.
+
+## Author
+
+**Chibuzo Prosper Onyiwe** · Business Technology, Manchester Metropolitan University ·
+[LinkedIn](https://www.linkedin.com/in/prosper-onyiwe)
